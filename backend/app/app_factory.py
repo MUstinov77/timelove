@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from backend.app.api.v1 import router
+from backend.app.api.v1 import api_router
 from backend.app.core.configuration import get_settings
 from backend.app.core.datastore import destroy_db, init_db
 
@@ -23,6 +23,6 @@ def create_app():
         lifespan=lifespan,
     )
 
-    app.include_router(router)
+    app.include_router(api_router)
 
     return app
