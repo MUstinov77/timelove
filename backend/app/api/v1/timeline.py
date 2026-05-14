@@ -26,14 +26,14 @@ async def get_timeline(
     return timeline
 
 @router.get(
-    "/{user_id}",
+    "/",
     response_model=list[TimelineResponseSchema]
 )
 async def get_my_timelines(
     user_id: int,
     timeline_service: TimelineService = Depends(get_timeline_service)
 ):
-    timelines = await timeline_service.retrieve_all(User.id, user_id)
+    timelines = await timeline_service.retrieve_all(User.id, 1)
     if not timelines:
         raise NotFoundException
     return timelines
