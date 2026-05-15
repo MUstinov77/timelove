@@ -3,12 +3,12 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.core.auth.jwt import JWTService
-from app.core.utils.encrypt import get_hashed_password
-from app.models.user import User
-from app.schemas.auth import Token, UserSignupLoginSchema
-from app.service.auth.service import get_auth_service
-from app.service.user import UserService, get_user_service
+from backend.app.core.auth.jwt import JWTService
+from backend.app.core.utils.encrypt import get_hashed_password
+from backend.app.model.user import User
+from backend.app.schema.auth import Token, UserSignupLoginSchema
+from backend.app.service.auth.service import get_auth_service
+from backend.app.service.user import UserService, get_user_service
 
 BASE_PREFIX = "/auth"
 
