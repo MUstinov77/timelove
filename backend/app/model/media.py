@@ -2,7 +2,7 @@ from sqlalchemy import Enum
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
-from backend.app.enum.media import MediaType
+from backend.app.core.enum.media import MediaType
 
 
 class Media(Base):
@@ -11,4 +11,3 @@ class Media(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     type: Mapped[str] = mapped_column(Enum(MediaType))
-    ...
