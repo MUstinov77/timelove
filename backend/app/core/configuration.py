@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     AUTH_SECRET_KEY: str
     JWT_ALGORITHM: str
     JWT_ISSUER: str
-    TOKEN_EXPIRE: int
+    TOKEN_EXPIRE_DAYS: int
     TITLE: str = "Timelove"
     DB_USER: str
     DB_PASSWORD: str
@@ -24,7 +24,7 @@ class Settings(BaseSettings):
         )
 
     model_config = SettingsConfigDict(
-        env_file=Path(__file__).parents[2].joinpath(".env")
+        env_file=Path(__file__).parents[1].joinpath(".env")
     )
 
 
