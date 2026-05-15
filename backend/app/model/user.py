@@ -9,13 +9,10 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    firstname: Mapped[str] = mapped_column(
-        String()
-    )
-    surname: Mapped[str] = mapped_column(
-        String()
-    )
-
+    email: Mapped[str] = mapped_column(String())
+    first_name: Mapped[str] = mapped_column(String())
+    last_name: Mapped[str] = mapped_column(String())
+    hashed_password: Mapped[str] = mapped_column(String())
     timelines = relationship(
         "Timeline",
         uselist=True,
