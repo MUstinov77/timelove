@@ -18,7 +18,7 @@ class JWTService:
         self.settings = get_settings()
         self.auth_secret_key = settings.AUTH_SECRET_KEY
         self.algorithm = settings.JWT_ALGORITHM
-        self.token_expire = settings.TOKEN_EXPIRE_DAYS
+        self.token_expire_hours = settings.TOKEN_EXPIRE_HOURS
         self.jwt_issuer = settings.JWT_ISSUER
 
 
@@ -27,7 +27,7 @@ class JWTService:
         payload = {
             "iss": self.jwt_issuer,
             "iat": now,
-            "exp": now + timedelta(hours=self.token_expire),
+            "exp": now + timedelta(hours=self.token_expire_hours),
             "context": user
         }
         token = jwt.encode(

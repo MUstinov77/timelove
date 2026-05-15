@@ -6,7 +6,7 @@ class Token(BaseModel):
     token_type: str
 
 
-class UserSigninSchema(BaseModel):
+class UserSignupSchema(BaseModel):
     email: EmailStr
     password: str
 
