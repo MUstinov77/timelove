@@ -1,6 +1,5 @@
-from fastapi import APIRouter
-
 from backend.app.api.v1 import auth, event, timeline
+from fastapi import APIRouter
 
 api_router = APIRouter()
 

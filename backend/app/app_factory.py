@@ -1,10 +1,9 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
-
 from backend.app.api.v1 import api_router
 from backend.app.core.configuration import get_settings
 from backend.app.core.datastore import destroy_db, init_db
+from fastapi import FastAPI
 
 settings = get_settings()
 

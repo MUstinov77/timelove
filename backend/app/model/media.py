@@ -1,8 +1,8 @@
+from backend.app.core.enum.media import MediaType
 from sqlalchemy import Enum
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
-from backend.app.core.enum.media import MediaType
 
 
 class Media(Base):

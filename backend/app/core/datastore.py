@@ -1,15 +1,9 @@
 from typing import Annotated
 
-from fastapi.params import Depends
-from sqlalchemy.ext.asyncio import (
-    AsyncEngine,
-    AsyncSession,
-    async_sessionmaker,
-    create_async_engine
-    )
-
 from backend.app.core.configuration import settings
-
+from fastapi.params import Depends
+from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
+                                    async_sessionmaker, create_async_engine)
 
 async_engine: AsyncEngine | None = None
 async_session_maker: async_sessionmaker[AsyncSession] | None = None

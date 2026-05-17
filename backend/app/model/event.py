@@ -1,7 +1,7 @@
-from sqlalchemy import String, ForeignKey, TIMESTAMP
-from sqlalchemy.orm import relationship, Mapped, mapped_column
-
 from datetime import date, datetime, timezone
+
+from sqlalchemy import TIMESTAMP, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
 

@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends
-
+from backend.app.core.auth.request_validator import authenticate_user
 from backend.app.core.exceptions import NotFoundException
 from backend.app.model.event import Event
 from backend.app.model.user import User
-from backend.app.schema.event import EventCreateUpdateSchema, EventResponseSchema
+from backend.app.schema.event import (EventCreateUpdateSchema,
+                                      EventResponseSchema)
 from backend.app.service.event import EventService, get_event_service
-from backend.app.core.auth.request_validator import authenticate_user
+from fastapi import APIRouter, Depends
 
 router = APIRouter(
     prefix="/event",

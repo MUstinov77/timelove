@@ -1,6 +1,5 @@
-from fastapi import FastAPI
-
 from backend.app.app_factory import create_app
+from fastapi import FastAPI
 
 app = create_app()
 

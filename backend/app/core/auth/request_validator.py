@@ -1,11 +1,10 @@
 from typing import Annotated
 
-from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
-
 from backend.app.core.auth.jwt import JWTService
 from backend.app.model.user import User
 from backend.app.service.user import UserService, get_user_service
+from fastapi import Depends
+from fastapi.security import OAuth2PasswordBearer
 
 auth_schema = OAuth2PasswordBearer(tokenUrl="auth/login")
 
