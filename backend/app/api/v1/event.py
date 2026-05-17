@@ -5,9 +5,13 @@ from backend.app.model.event import Event
 from backend.app.model.user import User
 from backend.app.schema.event import EventCreateUpdateSchema, EventResponseSchema
 from backend.app.service.event import EventService, get_event_service
+from backend.app.core.auth.request_validator import authenticate_user
 
 router = APIRouter(
     prefix="/event",
+    dependencies=(
+        Depends(authenticate_user),
+    )
 )
 
 @router.get(
@@ -28,9 +32,10 @@ async def get_event(
     response_model=list[EventResponseSchema]
 )
 async def get_my_events(
+        user = Depends(authenticate_user),
         event_service: EventService = Depends(get_event_service)
 ):
-    events = await event_service.retrieve_all(User.id, 1)
+    events = await event_service.retrieve_all(User.id, user.get("user_id"))
     if not events:
         raise NotFoundException
     return events
@@ -41,9 +46,13 @@ async def get_my_events(
 )
 async def create_event(
         create_data: EventCreateUpdateSchema,
+        user = Depends(authenticate_user),
         event_service: EventService = Depends(get_event_service)
 ):
-    event = await event_service.create_instance(create_data.model_dump())
+    user_id = user.get("user_id")
+    event_data = create_data.model_dump()
+    event_data["user_id"] = user_id
+    event = await event_service.create_instance(event_data)
     if not event:
         raise NotFoundException
     return event
@@ -53,8 +62,8 @@ async def create_event(
     response_model=EventResponseSchema
 )
 async def update_event(
-        update_data: EventCreateUpdateSchema,
         event_id: int,
+        update_data: EventCreateUpdateSchema,
         event_service: EventService = Depends(get_event_service)
 ):
     event = await event_service.update_instance(update_data.model_dump(), event_id)
