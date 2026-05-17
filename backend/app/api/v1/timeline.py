@@ -7,9 +7,13 @@ from backend.app.service.timeline import TimelineService, get_timeline_service
 from backend.app.model.timeline import Timeline
 from backend.app.model.user import User
 from backend.app.core.exceptions import NotFoundException
+from backend.app.core.auth.request_validator import authenticate_user
 
 router = APIRouter(
     prefix="/timeline",
+    dependencies=(
+        Depends(authenticate_user),
+    )
 )
 
 @router.get(
@@ -30,10 +34,11 @@ async def get_timeline(
     response_model=list[TimelineResponseSchema]
 )
 async def get_my_timelines(
-    user_id: int,
+    user = Depends(authenticate_user),
     timeline_service: TimelineService = Depends(get_timeline_service)
 ):
-    timelines = await timeline_service.retrieve_all(User.id, 1)
+
+    timelines = await timeline_service.retrieve_all(User.id, user.get("user_id"))
     if not timelines:
         raise NotFoundException
     return timelines
@@ -44,9 +49,12 @@ async def get_my_timelines(
 )
 async def create_timeline(
     create_data: TimelineCreateUpdateSchema,
-    timeline_service: Annotated[TimelineService, Depends(get_timeline_service)]
+    user = Depends(authenticate_user),
+    timeline_service: TimelineService = Depends(get_timeline_service)
 ):
-    timeline = await timeline_service.create_instance(create_data.model_dump())
+    timeline_data = create_data.model_dump()
+    timeline_data["user_id"] = user["user_id"]
+    timeline = await timeline_service.create_instance(timeline_data)
     if not timeline:
         raise NotFoundException
     return timeline

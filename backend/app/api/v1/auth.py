@@ -1,14 +1,16 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from backend.app.core.auth.jwt import JWTService
+from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.encrypt import get_hashed_password
 from backend.app.model.user import User
-from backend.app.schema.auth import Token, UserSignupSchema
+from backend.app.schema.auth import Token, UserSignupSchema, UserLoginSchema
 # from backend.app.service.auth.service import get_auth_service
 from backend.app.service.user import UserService, get_user_service
+from backend.app.core.utils.encrypt import verify_password
 
 BASE_PREFIX = "/auth"
 
@@ -38,8 +40,16 @@ async def signup(
     response_model=Token | None
 )
 async def login(
-        login_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+        login_data: OAuth2PasswordRequestForm = Depends(),
         user_service: UserService = Depends(get_user_service)
 ):
-    print(login_data.username, login_data.password)
-    return {"access_token": "", "token_type": "bearer"}
+    user = await user_service.retrieve_one(User.email, login_data.username)
+    if not user:
+        raise NotFoundException
+    if not await verify_password(login_data.password, user.hashed_password):
+        raise NotFoundException
+    token = JWTService().create_and_encode_token({
+        "user_id": user.id,
+        "username": user.email
+    })
+    return {"access_token": token}

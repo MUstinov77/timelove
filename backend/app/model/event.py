@@ -26,7 +26,4 @@ class Event(Base):
         "Timeline",
         back_populates="events"
     )
-    audio = relationship(
-        ...
-    )
 
