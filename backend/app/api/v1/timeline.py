@@ -11,6 +11,7 @@ from fastapi import APIRouter, Depends
 
 from backend.app.service.user import get_user_service, UserService
 
+
 router = APIRouter(
     prefix="/timeline",
     dependencies=(
@@ -31,6 +32,20 @@ async def get_my_timelines(
     if not user:
         raise NotFoundException
     return user.owned_timelines + user.timeline_membership
+
+
+@router.post(
+    "/invite/{user_id}"
+)
+async def invite_user_to_timeline(
+        user_id: int,
+        user_service: UserService = Depends(get_user_service)
+):
+    user = await user_service.retrieve_one(User.id, user_id)
+    if not user:
+        raise NotFoundException
+    user.timeline_membership.append(user)
+    return {"message": "User invited to timeline"}
 
 
 @router.get(
@@ -62,6 +77,7 @@ async def create_timeline(
         raise NotFoundException
     return timeline
 
+
 @router.patch(
     "/{timeline_id}",
     response_model=TimelineResponseSchema
@@ -75,6 +91,7 @@ async def update_timeline(
     if not timeline:
         raise NotFoundException
     return timeline
+
 
 @router.delete("/{timeline_id}")
 async def delete_timeline(
