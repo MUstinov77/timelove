@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Column, Table, Integer
+from sqlalchemy import Column, ForeignKey, Integer, Table
 
 from .base import Base
 
@@ -11,8 +11,6 @@ timeline_members = Table(
         Integer,
         ForeignKey("timelines.id"),
     ),
-    ## TODO: ADD permisions to table
-    # permision, type: strEnum(
     Column(
         "member_id",
         Integer,

@@ -10,3 +10,10 @@ class NotFoundException(HTTPException):
             detail="Item not found"
         )
 
+class NotOwnerExceptions(HTTPException):
+
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not the owner of this item"
+        )
