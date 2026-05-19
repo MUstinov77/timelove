@@ -25,14 +25,12 @@ router = APIRouter(
 )
 async def get_my_timelines(
     user_credentials = Depends(authenticate_user),
-    timeline_service: TimelineService = Depends(get_timeline_service),
     user_service: UserService = Depends(get_user_service)
 ):
-    timelines = await timeline_service.retrieve_all(User.id, user_credentials.get("user_id"))
     user = await user_service.retrieve_one(User.id, user_credentials.get("user_id"))
-    if not timelines:
+    if not user:
         raise NotFoundException
-    return user.owned_timelines
+    return user.owned_timelines + user.timeline_membership
 
 
 @router.get(
