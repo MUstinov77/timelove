@@ -10,7 +10,7 @@ class NotFoundException(HTTPException):
             detail="Item not found"
         )
 
-class NotOwnerExceptions(HTTPException):
+class NotOwnerException(HTTPException):
 
     def __init__(self):
         super().__init__(

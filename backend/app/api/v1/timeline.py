@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 
 from backend.app.core.auth.request_validator import authenticate_user
-from backend.app.core.exceptions import NotFoundException
+from backend.app.core.exceptions import NotFoundException, NotOwnerException
 from backend.app.model.timeline import Timeline
 from backend.app.model.user import User
 from backend.app.schema.timeline import (TimelineCreateUpdateSchema,
@@ -88,7 +88,7 @@ async def update_timeline(
 ):
     timeline = await timeline_service.update_instance(update_data.model_dump(), timeline_id)
     if user_credentials.get("user_id") != timeline.owner_id:
-        raise HTTPException(status_code=403, detail="You are not the owner of this timeline")
+        raise NotOwnerException
     if not timeline:
         raise NotFoundException
     return timeline
