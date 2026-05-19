@@ -32,5 +32,6 @@ class Timeline(Base):
         "User",
         uselist=True,
         secondary=timeline_members,
-        back_populates="timeline_membership"
+        back_populates="timeline_membership",
+        lazy="selectin"
     )

@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from fastapi.exceptions import HTTPException
 
 from backend.app.core.auth.request_validator import authenticate_user
 from backend.app.core.exceptions import NotFoundException, NotOwnerException
@@ -33,16 +32,19 @@ async def get_my_timelines(
 
 
 @router.post(
-    "/invite/{user_id}"
+    "/{timeline_id}/invite/{user_id}"
 )
 async def invite_user_to_timeline(
         user_id: int,
+        timeline_id: int,
+        timeline_service: TimelineService = Depends(get_timeline_service),
         user_service: UserService = Depends(get_user_service)
 ):
     user = await user_service.retrieve_one(User.id, user_id)
-    if not user:
+    timeline = await timeline_service.retrieve_one(Timeline.id, timeline_id)
+    if not user or not timeline:
         raise NotFoundException
-    user.timeline_membership.append(user)
+    timeline.members.append(user)
     return {"message": "User invited to timeline"}
 
 
