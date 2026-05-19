@@ -16,7 +16,8 @@ class Event(Base):
         TIMESTAMP(timezone=True),
         default=datetime.now(timezone.utc)
     )
-    description: Mapped[str] = mapped_column(String())
+    location: Mapped[str] = mapped_column(String(), nullable=True)
+    description: Mapped[str] = mapped_column(String(), nullable=True)
 
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
