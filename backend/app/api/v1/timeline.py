@@ -8,6 +8,8 @@ from backend.app.service.timeline import TimelineService, get_timeline_service
 from backend.app.service.user import UserService, get_user_service
 from fastapi import APIRouter, Depends
 from backend.app.core.utils.permission import check_member_permission
+from backend.app.core.enum.permission import MemberPermission
+from backend.app.model.timeline_members import timeline_members
 
 router = APIRouter(
     prefix="/timeline",
@@ -37,6 +39,7 @@ async def get_my_timelines(
 async def invite_user_to_timeline(
         user_id: int,
         timeline_id: int,
+        granted_permission: MemberPermission,
         timeline_service: TimelineService = Depends(get_timeline_service),
         user_service: UserService = Depends(get_user_service),
         _check_permission = Depends(check_member_permission)
