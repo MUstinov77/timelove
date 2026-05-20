@@ -39,7 +39,7 @@ async def invite_user_to_timeline(
         timeline_id: int,
         timeline_service: TimelineService = Depends(get_timeline_service),
         user_service: UserService = Depends(get_user_service),
-        member_permission = Depends(check_member_permission)
+        _check_permission = Depends(check_member_permission)
 ):
     user = await user_service.retrieve_one(User.id, user_id)
     timeline = await timeline_service.retrieve_one(Timeline.id, timeline_id)
@@ -87,7 +87,7 @@ async def update_timeline(
     timeline_id: int,
     update_data: TimelineCreateUpdateSchema,
     timeline_service: TimelineService = Depends(get_timeline_service),
-    check_permission = Depends(check_member_permission)
+    _check_permission = Depends(check_member_permission)
 ):
     timeline = await timeline_service.update_instance(update_data.model_dump(), timeline_id)
     if not timeline:
@@ -100,7 +100,7 @@ async def delete_timeline(
     timeline_id: int,
     user_credentials = Depends(authenticate_user),
     timeline_service: TimelineService = Depends(get_timeline_service),
-    check_permission = Depends(check_member_permission)
+    _check_permission = Depends(check_member_permission)
 ):
     timeline = await timeline_service.delete_instance(timeline_id)
     if not timeline:
