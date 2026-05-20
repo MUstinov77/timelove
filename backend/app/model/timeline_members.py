@@ -1,8 +1,8 @@
-from sqlalchemy import Column, ForeignKey, Integer, Table
+from sqlalchemy import Column, ForeignKey, Integer, Table, Enum
 
+from backend.app.core.enum.permission import MemberPermission
 from .base import Base
 
-## TODO: add cascade to table
 timeline_members = Table(
     "timeline_members",
     Base.metadata,
@@ -10,6 +10,11 @@ timeline_members = Table(
         "timeline_id",
         Integer,
         ForeignKey("timelines.id"),
+    ),
+    Column(
+        "member_permission",
+        Enum(MemberPermission),
+        default=MemberPermission.DEFAULT,
     ),
     Column(
         "member_id",
