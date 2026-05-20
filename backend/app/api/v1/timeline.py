@@ -7,6 +7,7 @@ from backend.app.schema.timeline import (TimelineCreateUpdateSchema,
 from backend.app.service.timeline import TimelineService, get_timeline_service
 from backend.app.service.user import UserService, get_user_service
 from fastapi import APIRouter, Depends
+from backend.app.core.utils.permission import check_member_permission
 
 router = APIRouter(
     prefix="/timeline",
@@ -37,7 +38,8 @@ async def invite_user_to_timeline(
         user_id: int,
         timeline_id: int,
         timeline_service: TimelineService = Depends(get_timeline_service),
-        user_service: UserService = Depends(get_user_service)
+        user_service: UserService = Depends(get_user_service),
+        member_permission = Depends(check_member_permission)
 ):
     user = await user_service.retrieve_one(User.id, user_id)
     timeline = await timeline_service.retrieve_one(Timeline.id, timeline_id)
@@ -84,12 +86,10 @@ async def create_timeline(
 async def update_timeline(
     timeline_id: int,
     update_data: TimelineCreateUpdateSchema,
-    user_credentials = Depends(authenticate_user),
-    timeline_service: TimelineService = Depends(get_timeline_service)
+    timeline_service: TimelineService = Depends(get_timeline_service),
+    check_permission = Depends(check_member_permission)
 ):
     timeline = await timeline_service.update_instance(update_data.model_dump(), timeline_id)
-    if user_credentials.get("user_id") != timeline.owner_id:
-        raise PermissionException
     if not timeline:
         raise NotFoundException
     return timeline
@@ -99,7 +99,8 @@ async def update_timeline(
 async def delete_timeline(
     timeline_id: int,
     user_credentials = Depends(authenticate_user),
-    timeline_service: TimelineService = Depends(get_timeline_service)
+    timeline_service: TimelineService = Depends(get_timeline_service),
+    check_permission = Depends(check_member_permission)
 ):
     timeline = await timeline_service.delete_instance(timeline_id)
     if not timeline:
