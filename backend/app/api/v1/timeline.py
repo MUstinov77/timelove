@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from backend.app.core.auth.request_validator import authenticate_user
-from backend.app.core.exceptions import NotFoundException, NotOwnerException
+from backend.app.core.exceptions import NotFoundException, PermissionException
 from backend.app.model.timeline import Timeline
 from backend.app.model.user import User
 from backend.app.schema.timeline import (TimelineCreateUpdateSchema,
@@ -90,7 +90,7 @@ async def update_timeline(
 ):
     timeline = await timeline_service.update_instance(update_data.model_dump(), timeline_id)
     if user_credentials.get("user_id") != timeline.owner_id:
-        raise NotOwnerException
+        raise PermissionException
     if not timeline:
         raise NotFoundException
     return timeline
@@ -99,9 +99,12 @@ async def update_timeline(
 @router.delete("/{timeline_id}")
 async def delete_timeline(
     timeline_id: int,
+    user_credentials = Depends(authenticate_user),
     timeline_service: TimelineService = Depends(get_timeline_service)
 ):
     timeline = await timeline_service.delete_instance(timeline_id)
     if not timeline:
         raise NotFoundException
+    if user_credentials.get("user_id") != timeline.owner_id:
+        raise PermissionException
     return timeline
