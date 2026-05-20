@@ -1,5 +1,3 @@
-from fastapi import APIRouter, Depends
-
 from backend.app.core.auth.request_validator import authenticate_user
 from backend.app.core.exceptions import NotFoundException, PermissionException
 from backend.app.model.timeline import Timeline
@@ -8,6 +6,7 @@ from backend.app.schema.timeline import (TimelineCreateUpdateSchema,
                                          TimelineResponseSchema)
 from backend.app.service.timeline import TimelineService, get_timeline_service
 from backend.app.service.user import UserService, get_user_service
+from fastapi import APIRouter, Depends
 
 router = APIRouter(
     prefix="/timeline",

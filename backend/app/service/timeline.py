@@ -1,7 +1,8 @@
-from backend.app.core.datastore import postgres_session_provider
-from backend.app.model.timeline import Timeline
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from backend.app.model.timeline import Timeline
+from backend.app.core.datastore import postgres_session_provider
 
 from .base import BaseService
 

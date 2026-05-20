@@ -1,6 +1,6 @@
-from sqlalchemy import Column, ForeignKey, Integer, Table, Enum
-
 from backend.app.core.enum.permission import MemberPermission
+from sqlalchemy import Column, Enum, ForeignKey, Integer, Table
+
 from .base import Base
 
 timeline_members = Table(
