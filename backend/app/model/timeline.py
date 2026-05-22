@@ -2,7 +2,6 @@ from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
-from .timeline_members import timeline_members
 
 
 class Timeline(Base):
@@ -29,9 +28,7 @@ class Timeline(Base):
         back_populates="owned_timelines"
     )
     members = relationship(
-        "User",
-        uselist=True,
-        secondary=timeline_members,
-        back_populates="timeline_membership",
+        "TimelineMembers",
+        back_populates="timeline",
         lazy="selectin"
     )

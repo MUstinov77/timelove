@@ -2,7 +2,6 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
-from .timeline_members import timeline_members
 
 
 class User(Base):
@@ -26,10 +25,9 @@ class User(Base):
         lazy="selectin"
     )
     timeline_membership = relationship(
-        "Timeline",
+        "TimelineMembers",
         uselist=True,
-        secondary=timeline_members,
-        back_populates="members",
+        back_populates="member",
         lazy="selectin"
     )
 

@@ -33,7 +33,7 @@ class BaseService:
         result = await self.session.execute(query)
         return result.scalars().one()
 
-    async def retrieve_one(self, field: Any, field_value: Any):
+    async def retrieve_one(self, field: Any, field_value: Any, *args, **kwargs):
         query = select(self.model).where(field == field_value)
         result = await self.session.execute(query)
         return result.scalars().first()
