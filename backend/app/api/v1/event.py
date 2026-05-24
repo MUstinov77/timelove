@@ -8,6 +8,7 @@ from backend.app.service.event import EventService, get_event_service
 from backend.app.shortcuts.event import retrieve_event
 from fastapi import APIRouter, Depends
 
+
 router = APIRouter(
     prefix="/event",
     dependencies=(
@@ -15,27 +16,6 @@ router = APIRouter(
     )
 )
 
-@router.get(
-    "/{event_id}",
-    response_model=EventResponseSchema,
-)
-async def get_event(
-        event: Event = Depends(retrieve_event)
-):
-    return event
-
-@router.get(
-    "/",
-    response_model=list[EventResponseSchema]
-)
-async def get_my_events(
-        user = Depends(authenticate_user),
-        event_service: EventService = Depends(get_event_service)
-):
-    events = await event_service.retrieve_all(User.id, user.get("user_id"))
-    if not events:
-        raise NotFoundException
-    return events
 
 @router.post(
     "/",
@@ -53,6 +33,17 @@ async def create_event(
     if not event:
         raise NotFoundException
     return event
+
+
+@router.get(
+    "/{event_id}",
+    response_model=EventResponseSchema,
+)
+async def get_event(
+        event: Event = Depends(retrieve_event)
+):
+    return event
+
 
 @router.patch(
     "/{event_id}",
