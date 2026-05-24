@@ -50,7 +50,8 @@ def upgrade() -> None:
     )
     op.create_table('timeline_members',
     sa.Column('timeline_id', sa.Integer(), nullable=True),
-    sa.Column('member_permission', sa.Enum('DEFAULT', 'CHANGE', name='memberpermission'), nullable=True),
+    sa.Column(
+        'member_permission', sa.Enum('DEFAULT', 'CHANGE', name='memberpermission', create_type=False), nullable=True),
     sa.Column('member_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['member_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['timeline_id'], ['timelines.id'], )

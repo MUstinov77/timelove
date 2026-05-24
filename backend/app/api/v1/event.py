@@ -5,6 +5,7 @@ from backend.app.model.user import User
 from backend.app.schema.event import (EventCreateUpdateSchema,
                                       EventResponseSchema)
 from backend.app.service.event import EventService, get_event_service
+from backend.app.shortcuts.event import retrieve_event
 from fastapi import APIRouter, Depends
 
 router = APIRouter(
@@ -19,12 +20,8 @@ router = APIRouter(
     response_model=EventResponseSchema,
 )
 async def get_event(
-        event_id: int,
-        event_service: EventService = Depends(get_event_service)
+        event: Event = Depends(retrieve_event)
 ):
-    event = await event_service.retrieve_one(Event.id, event_id)
-    if not event:
-        raise NotFoundException
     return event
 
 @router.get(
