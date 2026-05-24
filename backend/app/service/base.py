@@ -81,3 +81,14 @@ class BaseService:
                 status_code=400,
                 detail="Error while updating instance"
             )
+
+    async def retrieve_all_by_user(self, field: Any, field_value: Any, user_id: int):
+        query = (
+            select(self.model).
+            where(
+                field == field_value,
+                self.model.user_id == user_id,
+            )
+        )
+        result = await self.session.execute(query)
+        return result.scalars().all()
