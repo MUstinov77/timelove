@@ -1,5 +1,5 @@
 from backend.app.core.auth.request_validator import authenticate_user
-from backend.app.core.exceptions import NotFoundException, PermissionException
+from backend.app.core.exceptions import NotFoundException
 from backend.app.model.timeline import Timeline
 from backend.app.model.user import User
 from backend.app.schema.timeline import (TimelineCreateUpdateSchema,
@@ -10,6 +10,9 @@ from fastapi import APIRouter, Depends
 from backend.app.core.utils.permission import check_member_permission
 from backend.app.schema.member import InviteUserToTimelineSchema
 from backend.app.service.member import MemberService, get_member_service
+from backend.app.service.event import EventService, get_event_service
+from backend.app.model.event import Event
+from backend.app.schema.event import EventResponseSchema
 
 
 router = APIRouter(
@@ -50,6 +53,7 @@ async def create_timeline(
         raise NotFoundException
     return timeline
 
+
 @router.post(
     "/{timeline_id}/invite"
 )
@@ -64,6 +68,19 @@ async def invite_user_to_timeline(
     await member_service.create_instance(membership_data)
     return {"message": "User invited to timeline"}
 
+@router.get(
+    "/{timeline_id}/event",
+    response_model=list[EventResponseSchema]
+)
+async def get_timeline_events(
+        timeline_id: int,
+        event_service: EventService = Depends(get_event_service),
+):
+    events = await event_service.retrieve_all(Event.timeline_id, timeline_id)
+    if not events:
+        raise NotFoundException
+    return events
+
 
 @router.get(
     "/{timeline_id}",
@@ -77,7 +94,6 @@ async def get_timeline(
     if not timeline:
         raise NotFoundException
     return timeline
-
 
 
 @router.patch(
