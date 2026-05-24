@@ -28,7 +28,6 @@ async def get_my_timelines(
     user_credentials = Depends(authenticate_user),
     user_service: UserService = Depends(get_user_service)
 ):
-    print("Here get all")
     user = await user_service.retrieve_one(User.id, user_credentials.get("user_id"))
     if not user:
         raise NotFoundException
@@ -44,7 +43,6 @@ async def create_timeline(
     user_credentials = Depends(authenticate_user),
     timeline_service: TimelineService = Depends(get_timeline_service)
 ):
-    print("Here create")
     timeline_data = create_data.model_dump()
     timeline_data["owner_id"] = user_credentials["user_id"]
     timeline = await timeline_service.create_instance(timeline_data)
@@ -75,7 +73,6 @@ async def get_timeline(
     timeline_id: int,
     timeline_service: TimelineService = Depends(get_timeline_service)
 ):
-    print("Here id")
     timeline = await timeline_service.retrieve_one(Timeline.id, timeline_id)
     if not timeline:
         raise NotFoundException
@@ -93,7 +90,6 @@ async def update_timeline(
     timeline_service: TimelineService = Depends(get_timeline_service),
     _check_permission = Depends(check_member_permission)
 ):
-    print("Here u")
     timeline = await timeline_service.update_instance(update_data.model_dump(), timeline_id)
     if not timeline:
         raise NotFoundException
@@ -106,7 +102,6 @@ async def delete_timeline(
     timeline_service: TimelineService = Depends(get_timeline_service),
     _check_permission = Depends(check_member_permission)
 ):
-    print("Here d")
     timeline = await timeline_service.delete_instance(timeline_id)
     if not timeline:
         raise NotFoundException
