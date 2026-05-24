@@ -82,13 +82,9 @@ class BaseService:
                 detail="Error while updating instance"
             )
 
-    async def retrieve_all_by_user(self, field: Any, field_value: Any, user_id: int):
-        query = (
-            select(self.model).
-            where(
-                field == field_value,
-                self.model.user_id == user_id,
-            )
-        )
+    async def retrieve_all_by_user(self,  user_id: int, field: Any = None, field_value: Any = None):
+        query = select(self.model).where(self.model.user_id == user_id)
+        if field:
+            query = query.where(field == field_value)
         result = await self.session.execute(query)
         return result.scalars().all()
