@@ -11,8 +11,6 @@ from fastapi import APIRouter, Depends
 from backend.app.core.utils.permission import check_member_permission, check_admin_permission, check_moder_permission
 from backend.app.schema.member import InviteUserToTimelineSchema
 from backend.app.service.member import MemberService, get_member_service
-from backend.app.service.event import EventService, get_event_service
-from backend.app.model.event import Event
 from backend.app.schema.event import EventResponseSchema
 
 
