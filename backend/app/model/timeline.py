@@ -20,7 +20,8 @@ class Timeline(Base):
     events = relationship(
         "Event",
         back_populates="timeline",
-        uselist=True
+        uselist=True,
+        lazy="selectin"
     )
 
     owner = relationship(

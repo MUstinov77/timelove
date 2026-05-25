@@ -1,8 +1,8 @@
 """Init
 
-Revision ID: 95be60c69e1b
+Revision ID: 51a0a6c16498
 Revises: 
-Create Date: 2026-05-20 14:33:00.532178
+Create Date: 2026-05-25 12:15:50.601611
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '95be60c69e1b'
+revision: str = '51a0a6c16498'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -49,12 +49,13 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('timeline_members',
-    sa.Column('timeline_id', sa.Integer(), nullable=True),
-    sa.Column(
-        'member_permission', sa.Enum('DEFAULT', 'CHANGE', name='memberpermission', create_type=False), nullable=True),
-    sa.Column('member_id', sa.Integer(), nullable=True),
+    sa.Column('timeline_id', sa.Integer(), nullable=False),
+    sa.Column('member_permission', sa.Enum('DEFAULT', 'MODERATOR', 'ADMIN', name='memberpermission'), nullable=False),
+    sa.Column('member_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['member_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['timeline_id'], ['timelines.id'], )
+    sa.ForeignKeyConstraint(['timeline_id'], ['timelines.id'], ),
+    sa.PrimaryKeyConstraint('timeline_id', 'member_id'),
+    sa.UniqueConstraint('timeline_id', 'member_id', name='unique_timeline_member')
     )
     # ### end Alembic commands ###
 
