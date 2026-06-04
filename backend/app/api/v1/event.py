@@ -1,16 +1,17 @@
+from fastapi import APIRouter, Depends, UploadFile
+
+from backend.app.core.utils.permission import check_moder_permission
 from backend.app.core.auth.request_validator import authenticate_user
 from backend.app.core.exceptions import NotFoundException
 from backend.app.model.event import Event
-from backend.app.model.user import User
 from backend.app.schema.event import (EventCreateUpdateSchema,
                                       EventResponseSchema)
 from backend.app.service.event import EventService, get_event_service
 from backend.app.shortcuts.event import retrieve_event
-from fastapi import APIRouter, Depends
 
 
 router = APIRouter(
-    prefix="/event",
+    prefix="/{timeline_id}/event",
     dependencies=(
         Depends(authenticate_user),
     )
@@ -23,10 +24,11 @@ router = APIRouter(
 )
 async def create_event(
         create_data: EventCreateUpdateSchema,
-        user = Depends(authenticate_user),
-        event_service: EventService = Depends(get_event_service)
+        auth_user = Depends(authenticate_user),
+        event_service: EventService = Depends(get_event_service),
+        _moder_permission = Depends(check_moder_permission),
 ):
-    user_id = user.get("user_id")
+    user_id = auth_user.get("user_id")
     event_data = create_data.model_dump()
     event_data["user_id"] = user_id
     event = await event_service.create_instance(event_data)
@@ -52,7 +54,8 @@ async def get_event(
 async def update_event(
         event_id: int,
         update_data: EventCreateUpdateSchema,
-        event_service: EventService = Depends(get_event_service)
+        event_service: EventService = Depends(get_event_service),
+        _moder_permission = Depends(check_moder_permission),
 ):
     event = await event_service.update_instance(update_data.model_dump(), event_id)
     if not event:
@@ -62,9 +65,18 @@ async def update_event(
 @router.delete("/{event_id}")
 async def delete_event(
         event_id: int,
-        event_service: EventService = Depends(get_event_service)
+        event_service: EventService = Depends(get_event_service),
+        _moder_permission = Depends(check_moder_permission),
 ):
     event = await event_service.delete_instance(event_id)
     if not event:
         raise NotFoundException
     return event
+
+@router.post(
+    "/{event_id}/uploadfiles/",
+)
+async def upload_files_to_event(
+        files: list[UploadFile],
+):
+    return {"filenames": [file.filename for file in files]}
