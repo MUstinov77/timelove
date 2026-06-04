@@ -25,7 +25,11 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from backend.app.model.base import Base
+# from backend.app.model.user import User
 # from backend.app.model.timeline import Timeline
+# from backend.app.model.event import Event
+# from backend.app.model.timeline_members import TimelineMembers
+# from backend.app.model.attachment import Attachment
 
 target_metadata = Base.metadata
 
@@ -62,6 +66,7 @@ def run_migrations_offline() -> None:
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
+    print(Base.registry._class_registry)
 
     with context.begin_transaction():
         context.run_migrations()
