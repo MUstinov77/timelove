@@ -1,7 +1,7 @@
 from enum import StrEnum
 
 
-class MediaType(StrEnum):
+class AttachmentType(StrEnum):
     IMAGE = "image"
     VIDEO = "video"
     AUDIO = "audio"

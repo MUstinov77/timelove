@@ -1,10 +1,14 @@
+from typing import TYPE_CHECKING
 from datetime import date, datetime, timezone
 
 from sqlalchemy import TIMESTAMP, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base import Base
+from backend.app.model.base import Base
+from backend.app.model.attachment import Attachment
 
+if TYPE_CHECKING:
+    from backend.app.model.timeline import Timeline
 
 class Event(Base):
 
@@ -18,13 +22,12 @@ class Event(Base):
     )
     location: Mapped[str] = mapped_column(String(), nullable=True)
     description: Mapped[str] = mapped_column(String(), nullable=True)
-
-
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     timeline_id: Mapped[int] = mapped_column(ForeignKey("timelines.id"))
 
-    timeline = relationship(
-        "Timeline",
+    timeline: Mapped["Timeline"] = relationship(
         back_populates="events"
+    )
+    attachments: Mapped[list["Attachment"]] = relationship(
+        back_populates="event",
     )
 

@@ -1,9 +1,15 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.core.enum.permission import MemberPermission
 from sqlalchemy import Enum, ForeignKey, UniqueConstraint
 
-from .base import Base
+from backend.app.model.base import Base
+
+if TYPE_CHECKING:
+    from backend.app.model.timeline import Timeline
+    from backend.app.model.user import User
 
 class TimelineMembers(Base):
 
@@ -22,13 +28,11 @@ class TimelineMembers(Base):
         primary_key=True,
     )
 
-    timeline = relationship(
-        "Timeline",
+    timeline: Mapped["Timeline"] = relationship(
         back_populates="members"
     )
 
-    member = relationship(
-        "User",
+    member: Mapped["User"] = relationship(
         back_populates="timeline_membership"
     )
 

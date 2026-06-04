@@ -1,7 +1,14 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base import Base
+from backend.app.model.base import Base
+
+if TYPE_CHECKING:
+    from backend.app.model.timeline import Timeline
+    from backend.app.model.timeline_members import TimelineMembers
+
 
 
 class User(Base):
@@ -18,15 +25,11 @@ class User(Base):
     #     uselist=True,
     #     back_populates="user"
     # )
-    owned_timelines = relationship(
-        "Timeline",
-        uselist=True,
+    owned_timelines: Mapped[list["Timeline"]] = relationship(
         back_populates="owner",
         lazy="selectin"
     )
-    timeline_membership = relationship(
-        "TimelineMembers",
-        uselist=True,
+    timeline_membership: Mapped[list["TimelineMembers"]] = relationship(
         back_populates="member",
         lazy="selectin"
     )
