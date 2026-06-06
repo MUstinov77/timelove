@@ -4,8 +4,8 @@ from datetime import date, datetime, timezone
 from sqlalchemy import TIMESTAMP, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.app.model.base import Base
 from backend.app.model.attachment import Attachment
+from backend.app.model.base import Base
 
 if TYPE_CHECKING:
     from backend.app.model.timeline import Timeline
@@ -29,5 +29,7 @@ class Event(Base):
     )
     attachments: Mapped[list["Attachment"]] = relationship(
         back_populates="event",
+        cascade="all, delete-orphan",
+        order_by=Attachment.sort_order,
     )
 
