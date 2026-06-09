@@ -11,7 +11,7 @@ from backend.app.shortcuts.event import retrieve_event
 
 
 router = APIRouter(
-    prefix="/{timeline_id}/event",
+    prefix="/event",
     dependencies=(
         Depends(authenticate_user),
     )
@@ -24,13 +24,10 @@ router = APIRouter(
 )
 async def create_event(
         create_data: EventCreateUpdateSchema,
-        auth_user = Depends(authenticate_user),
         event_service: EventService = Depends(get_event_service),
         _moder_permission = Depends(check_moder_permission),
 ):
-    user_id = auth_user.get("user_id")
     event_data = create_data.model_dump()
-    event_data["user_id"] = user_id
     event = await event_service.create_instance(event_data)
     if not event:
         raise NotFoundException
@@ -73,10 +70,11 @@ async def delete_event(
         raise NotFoundException
     return event
 
-@router.post(
-    "/{event_id}/uploadfiles/",
+@router.get(
+    "/{event_id}/attachments",
+    response_model=EventResponseSchema,
 )
-async def upload_files_to_event(
-        files: list[UploadFile],
+async def get_event_attachments(
+        event = Depends(retrieve_event),
 ):
-    return {"filenames": [file.filename for file in files]}
+    return event.attachments

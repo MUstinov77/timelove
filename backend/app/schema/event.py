@@ -10,6 +10,8 @@ class EventCreateUpdateSchema(BaseModel):
     event_date: date
     description: str
 
+    timeline_id: int
+
 
 class EventResponseSchema(BaseModel):
     id: int

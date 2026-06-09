@@ -18,11 +18,11 @@ async def get_member_permission(
         raise PermissionException
     return membership.member_permission
 
+
 async def check_member_permission(
         member_permission: MemberPermission = Depends(get_member_permission)
 ):
     return member_permission
-
 
 
 async def check_moder_permission(

@@ -26,6 +26,7 @@ class Timeline(Base):
     # )
     events: Mapped[list["Event"]] = relationship(
         back_populates="timeline",
+        lazy="selectin"
     )
 
     owner: Mapped["User"] = relationship(

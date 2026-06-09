@@ -23,7 +23,6 @@ router = APIRouter(
         Depends(authenticate_user),
     )
 )
-router.include_router(event.router)
 
 
 @router.get(
@@ -81,7 +80,7 @@ async def invite_user_to_timeline(
     return {"message": "User invited to timeline"}
 
 @router.get(
-    "/{timeline_id}/event",
+    "/{timeline_id}/events",
     response_model=list[EventResponseSchema]
 )
 async def get_timeline_events(

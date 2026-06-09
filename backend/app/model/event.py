@@ -31,5 +31,6 @@ class Event(Base):
         back_populates="event",
         cascade="all, delete-orphan",
         order_by=Attachment.sort_order,
+        lazy="selectin"
     )
 
