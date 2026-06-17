@@ -1,10 +1,8 @@
-import os
 from typing import Annotated
-from mimetypes import guess_type
 
 
-from fastapi import APIRouter, UploadFile, File, Request, Query, Depends
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi.responses import HTMLResponse, FileResponse
 
 from backend.app.model.attachment import Attachment
 from backend.app.core.exceptions import NotFoundException
@@ -71,17 +69,17 @@ async def create_attachment(
 
 @router.get(
     "/{attachment_id}",
-
+    response_class=FileResponse,
 )
 async def get_attachment(
         attachment_id: int,
         attachment_service: AttachmentService = Depends(get_attachment_service),
-        _member_permission = Depends(check_member_permission)
+        # _member_permission = Depends(check_member_permission)
 ):
     attachment = await attachment_service.retrieve_one(Attachment.id, attachment_id)
     if not attachment:
         raise NotFoundException
-    return attachment
+    return attachment.storage_key
 
 
 
