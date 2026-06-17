@@ -20,7 +20,7 @@ def get_attachment_service(
 
 class AttachmentService(BaseService):
 
-    async def create_attachment(self, file, data):
+    async def create_attachment(self, file, request_data):
         mime_type, _ = guess_type(file.filename)
 
         file_id = uuid.uuid4()
@@ -37,7 +37,7 @@ class AttachmentService(BaseService):
         }
 
         # attachment_create_data.update(data.model_dump())
-        attachment_create_data.update(data)
+        attachment_create_data.update(request_data)
         attachment = await self.create_instance(attachment_create_data)
         try:
             file_content = await file.read()

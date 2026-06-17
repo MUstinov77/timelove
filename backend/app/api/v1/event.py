@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends, UploadFile, File
 
+from backend.app.service.attachment import AttachmentService, get_attachment_service
 from backend.app.schema.attachment import AttachmentResponseSchema
 from backend.app.core.utils.permission import check_moder_permission
 from backend.app.core.auth.request_validator import authenticate_user
@@ -79,3 +80,23 @@ async def get_event_attachments(
         event = Depends(retrieve_event),
 ):
     return event.attachments
+
+
+@router.post(
+    "/{event_id}/attachments",
+    response_model=AttachmentResponseSchema,
+)
+async def create_attachment(
+        event_id: int,
+        caption: str | None,
+        file: UploadFile = File(...),
+        attachment_service: AttachmentService = Depends(get_attachment_service),
+):
+    request_data = {
+        "caption": caption,
+        "event_id": event_id,
+    }
+    attachment = await attachment_service.create_attachment(file, request_data)
+    if not attachment:
+        raise NotFoundException
+    return attachment
