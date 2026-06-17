@@ -74,7 +74,7 @@ async def create_attachment(
 async def get_attachment(
         attachment_id: int,
         attachment_service: AttachmentService = Depends(get_attachment_service),
-        # _member_permission = Depends(check_member_permission)
+        _member_permission = Depends(check_member_permission)
 ):
     attachment = await attachment_service.retrieve_one(Attachment.id, attachment_id)
     if not attachment:

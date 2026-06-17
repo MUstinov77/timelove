@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, UploadFile
 
+from backend.app.schema.attachment import AttachmentResponseSchema
 from backend.app.core.utils.permission import check_moder_permission
 from backend.app.core.auth.request_validator import authenticate_user
 from backend.app.core.exceptions import NotFoundException
@@ -72,7 +73,7 @@ async def delete_event(
 
 @router.get(
     "/{event_id}/attachments",
-    response_model=EventResponseSchema,
+    response_model=list[AttachmentResponseSchema],
 )
 async def get_event_attachments(
         event = Depends(retrieve_event),
