@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
-from datetime import date, datetime, timezone
+from datetime import date
 
-from sqlalchemy import TIMESTAMP, ForeignKey, String, DATE
+from sqlalchemy import ForeignKey, String, DATE
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.model.attachment import Attachment

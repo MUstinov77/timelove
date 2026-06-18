@@ -1,15 +1,10 @@
-from typing import TYPE_CHECKING
-
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.app.core.enum.permission import MemberPermission
-from sqlalchemy import Enum, ForeignKey, UniqueConstraint, String
+from sqlalchemy import ForeignKey, UniqueConstraint, String
 
 from backend.app.model.base import Base
 
-if TYPE_CHECKING:
-    from backend.app.model.timeline import Timeline
-    from backend.app.model.user import User
 
 class TimelineMembers(Base):
 

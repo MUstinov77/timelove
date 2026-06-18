@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.model.base import Base
@@ -8,7 +8,6 @@ from backend.app.model.base import Base
 if TYPE_CHECKING:
     from backend.app.model.user import User
     from backend.app.model.event import Event
-    from backend.app.model.timeline_members import TimelineMembers
 
 
 class Timeline(Base):
