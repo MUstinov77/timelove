@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi import APIRouter, Depends, UploadFile, File, Request
 
 from backend.app.service.attachment import AttachmentService, get_attachment_service
 from backend.app.schema.attachment import AttachmentResponseSchema
@@ -15,7 +15,7 @@ from backend.app.shortcuts.event import retrieve_event
 router = APIRouter(
     prefix="/event",
     dependencies=(
-        Depends(authenticate_user),
+        # Depends(authenticate_user),
     )
 )
 
@@ -83,18 +83,22 @@ async def get_event_attachments(
 
 
 @router.post(
-    "/{event_id}/attachments",
+    "/{event_id}/attachment",
     response_model=AttachmentResponseSchema,
 )
 async def create_attachment(
         event_id: int,
         caption: str | None,
+        request: Request,
         file: UploadFile = File(...),
+        event = Depends(retrieve_event),
         attachment_service: AttachmentService = Depends(get_attachment_service),
 ):
+    sort_order = len(event.attachments) + 1 if event.attachments else 0
     request_data = {
         "caption": caption,
         "event_id": event_id,
+        "sort_order": sort_order,
     }
     attachment = await attachment_service.create_attachment(file, request_data)
     if not attachment:

@@ -20,7 +20,7 @@ router = APIRouter(
 async def get_attachments():
     content = """
 <body>
-<form action="/attachment/" enctype="multipart/form-data" method="post">
+<form action="/event/1/attachment/?caption=Some" enctype="multipart/form-data" method="post">
 <input name="file" type="file">
 <input type="submit">
 </form>
