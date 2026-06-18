@@ -28,7 +28,7 @@ async def check_member_permission(
 async def check_moder_permission(
         member_permission: MemberPermission = Depends(get_member_permission)
 ):
-    if member_permission == MemberPermission.DEFAULT:
+    if member_permission == MemberPermission.MEMBER:
         raise PermissionException
     return True
 

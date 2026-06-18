@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.core.enum.permission import MemberPermission
-from sqlalchemy import Enum, ForeignKey, UniqueConstraint
+from sqlalchemy import Enum, ForeignKey, UniqueConstraint, String
 
 from backend.app.model.base import Base
 
@@ -20,8 +20,8 @@ class TimelineMembers(Base):
         primary_key=True
     )
     member_permission: Mapped[str] = mapped_column(
-        Enum(MemberPermission),
-        default=MemberPermission.DEFAULT
+        String,
+        default=MemberPermission.MEMBER,
     )
     member_id: Mapped[int] = mapped_column(
         ForeignKey("users.id"),

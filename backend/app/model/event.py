@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from datetime import date, datetime, timezone
 
-from sqlalchemy import TIMESTAMP, ForeignKey, String
+from sqlalchemy import TIMESTAMP, ForeignKey, String, DATE
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.model.attachment import Attachment
@@ -17,8 +17,7 @@ class Event(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String())
     event_date: Mapped[date] = mapped_column(
-        TIMESTAMP(timezone=True),
-        default=datetime.now(timezone.utc)
+        DATE,
     )
     location: Mapped[str] = mapped_column(String(), nullable=True)
     description: Mapped[str] = mapped_column(String(), nullable=True)

@@ -37,7 +37,7 @@ async def get_my_timelines(
     user = await user_service.retrieve_one(User.id, user_id)
     if not user:
         raise NotFoundException
-    return user.owned_timelines + user.timeline_membership
+    return user.timelines
 
 
 @router.post(
@@ -52,7 +52,6 @@ async def create_timeline(
 ):
     user_id = auth_user.get("user_id")
     timeline_data = create_data.model_dump()
-    timeline_data["owner_id"] = user_id
     timeline = await timeline_service.create_instance(timeline_data)
     if not timeline:
         raise NotFoundException

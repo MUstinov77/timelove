@@ -17,23 +17,12 @@ class Timeline(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(), nullable=False)
-    owner_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    # user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    # member_ids: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    # user = relationship(
-    #     "User",
-    #     back_populates="timelines"
-    # )
     events: Mapped[list["Event"]] = relationship(
         back_populates="timeline",
         lazy="selectin"
     )
-
-    owner: Mapped["User"] = relationship(
-        back_populates="owned_timelines"
-    )
     members: Mapped[list["User"]] = relationship(
-        back_populates="timeline_membership",
+        back_populates="timelines",
         secondary="timeline_members",
         # lazy="selectin"
     )

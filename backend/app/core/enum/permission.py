@@ -2,6 +2,6 @@ from enum import StrEnum
 
 
 class MemberPermission(StrEnum):
-    DEFAULT = "DEFAULT"
+    MEMBER = "MEMBER"
     MODERATOR = "MODERATOR"
     ADMIN = "ADMIN"
