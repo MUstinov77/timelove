@@ -28,14 +28,6 @@ class TimelineMembers(Base):
         primary_key=True,
     )
 
-    timeline: Mapped["Timeline"] = relationship(
-        back_populates="members"
-    )
-
-    member: Mapped["User"] = relationship(
-        back_populates="timeline_membership"
-    )
-
     __table_args__ = (
         UniqueConstraint(
             "timeline_id",

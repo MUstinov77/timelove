@@ -30,8 +30,9 @@ class User(Base):
         back_populates="owner",
         lazy="selectin"
     )
-    timeline_membership: Mapped[list["TimelineMembers"]] = relationship(
-        back_populates="member",
+    timeline_membership: Mapped[list["Timeline"]] = relationship(
+        back_populates="members",
+        secondary="timeline_members",
         lazy="selectin"
     )
 
