@@ -16,60 +16,26 @@ router = APIRouter(
 )
 
 
-@router.get("/")
-async def get_attachments():
-    content = """
-<body>
-<form action="/event/1/attachment/?caption=Some" enctype="multipart/form-data" method="post">
-<input name="file" type="file">
-<input type="submit">
-</form>
-<form action="/attachment/uploadfiles/" enctype="multipart/form-data" method="post">
-<input name="files" type="file" multiple>
-<input type="submit">
-</form>
-</body>
-    """
-    return HTMLResponse(content=content)
-
-# @router.post("/")
-# async def get_attachments(
-#     timeline_id: int,
-#     event_id: int,
-# ):
-#     return
-
-
 @router.post(
     "/",
     response_model=AttachmentResponseSchema,
     status_code=201,
 )
 async def create_attachment(
-        # request_create_data: AttachmentCreateSchema,
+        create_data: AttachmentCreateSchema,
         file: Annotated[UploadFile, File(description="A file read as UploadFile")],
         attachment_service: AttachmentService = Depends(get_attachment_service),
 ):
-    # file_mimetype, _ = guess_type(file.filename)
-    # storage_key =
-    # attachment_data = {
-    #     "mime_type": file_mimetype,
-    #     "file_size": file.size,
-    #     "storage_key":
-    # }
-    request_create_data = {
-        "caption": "Some caption",
-        "event_id": 1
-    }
-    attachment = await attachment_service.create_attachment(file, request_create_data)
-
+    attachment = await attachment_service.create_attachment(file, create_data)
+    if not attachment:
+        raise NotFoundException
     return attachment
 
 
 
 @router.get(
     "/{attachment_id}",
-    response_class=FileResponse,
+    response_model=AttachmentResponseSchema,
 )
 async def get_attachment(
         attachment_id: int,
@@ -79,7 +45,4 @@ async def get_attachment(
     attachment = await attachment_service.retrieve_one(Attachment.id, attachment_id)
     if not attachment:
         raise NotFoundException
-    return attachment.storage_key
-
-
-
+    return attachment

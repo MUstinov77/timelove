@@ -15,7 +15,7 @@ from backend.app.shortcuts.event import retrieve_event
 router = APIRouter(
     prefix="/event",
     dependencies=(
-        # Depends(authenticate_user),
+        Depends(authenticate_user),
     )
 )
 
@@ -73,7 +73,7 @@ async def delete_event(
     return event
 
 @router.get(
-    "/{event_id}/attachments",
+    "/{event_id}/attachment",
     response_model=list[AttachmentResponseSchema],
 )
 async def get_event_attachments(
@@ -89,7 +89,6 @@ async def get_event_attachments(
 async def create_attachment(
         event_id: int,
         caption: str | None,
-        request: Request,
         file: UploadFile = File(...),
         event = Depends(retrieve_event),
         attachment_service: AttachmentService = Depends(get_attachment_service),
