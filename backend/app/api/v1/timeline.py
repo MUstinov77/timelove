@@ -9,10 +9,10 @@ from backend.app.schema.timeline import (TimelineCreateUpdateSchema,
                                          TimelineResponseSchema)
 from backend.app.service.timeline import TimelineService, get_timeline_service
 from backend.app.service.user import UserService, get_user_service
-from backend.app.core.utils.permission import check_member_permission, check_admin_permission, check_moder_permission, check_permission_dependency
+from backend.app.core.utils.permission import check_permission_dependency
 from backend.app.schema.member import InviteUserToTimelineSchema
 from backend.app.service.member import MemberService, get_member_service
-from backend.app.schema.event import EventResponseSchema
+from backend.app.api.v1.event import router as event_router
 
 
 
@@ -22,6 +22,8 @@ router = APIRouter(
         Depends(authenticate_user),
     )
 )
+
+router.include_router(event_router)
 
 
 @router.get(
@@ -64,9 +66,9 @@ async def create_timeline(
 
 
 @router.post(
-    "/{timeline_id}/invite"
+    "/{timeline_id}/add"
 )
-async def invite_user_to_timeline(
+async def add_user_to_timeline(
         timeline_id: int,
         invite_data: InviteUserToTimelineSchema,
         member_service: MemberService = Depends(get_member_service),
@@ -75,21 +77,7 @@ async def invite_user_to_timeline(
     membership_data = invite_data.model_dump()
     membership_data["timeline_id"] = timeline_id
     await member_service.create_instance(membership_data)
-    return {"message": "User invited to timeline"}
-
-@router.get(
-    "/{timeline_id}/events",
-    response_model=list[EventResponseSchema]
-)
-async def get_timeline_events(
-        timeline_id: int,
-        timeline_service: TimelineService = Depends(get_timeline_service),
-        _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
-):
-    timeline = await timeline_service.retrieve_one(Timeline.id, timeline_id)
-    if not timeline:
-        raise NotFoundException
-    return timeline.events
+    return {"message": "User added to timeline"}
 
 
 @router.get(
