@@ -70,7 +70,7 @@ async def invite_user_to_timeline(
         timeline_id: int,
         invite_data: InviteUserToTimelineSchema,
         member_service: MemberService = Depends(get_member_service),
-        _moder_permission = Depends(check_moder_permission)
+        _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
 ):
     membership_data = invite_data.model_dump()
     membership_data["timeline_id"] = timeline_id
@@ -99,7 +99,7 @@ async def get_timeline_events(
 async def get_timeline(
         timeline_id: int,
         timeline_service: TimelineService = Depends(get_timeline_service),
-        _member_permission = Depends(check_member_permission)
+        _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
     timeline = await timeline_service.retrieve_one(Timeline.id, timeline_id)
     if not timeline:
@@ -115,7 +115,7 @@ async def update_timeline(
     timeline_id: int,
     update_data: TimelineCreateUpdateSchema,
     timeline_service: TimelineService = Depends(get_timeline_service),
-    _moder_permission = Depends(check_moder_permission)
+    _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
 ):
     timeline = await timeline_service.update_instance(update_data.model_dump(), timeline_id)
     if not timeline:
@@ -127,7 +127,7 @@ async def update_timeline(
 async def delete_timeline(
     timeline_id: int,
     timeline_service: TimelineService = Depends(get_timeline_service),
-    _admin_permission = Depends(check_admin_permission)
+    _admin_permission = Depends(check_permission_dependency(MemberPermission.ADMIN))
 ):
     timeline = await timeline_service.delete_instance(timeline_id)
     if not timeline:
