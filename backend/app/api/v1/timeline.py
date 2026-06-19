@@ -9,12 +9,11 @@ from backend.app.schema.timeline import (TimelineCreateUpdateSchema,
                                          TimelineResponseSchema)
 from backend.app.service.timeline import TimelineService, get_timeline_service
 from backend.app.service.user import UserService, get_user_service
-from backend.app.core.utils.permission import check_member_permission, check_admin_permission, check_moder_permission
+from backend.app.core.utils.permission import check_member_permission, check_admin_permission, check_moder_permission, check_permission_dependency
 from backend.app.schema.member import InviteUserToTimelineSchema
 from backend.app.service.member import MemberService, get_member_service
 from backend.app.schema.event import EventResponseSchema
 
-from backend.app.api.v1 import event
 
 
 router = APIRouter(
@@ -85,7 +84,7 @@ async def invite_user_to_timeline(
 async def get_timeline_events(
         timeline_id: int,
         timeline_service: TimelineService = Depends(get_timeline_service),
-        _member_permission = Depends(check_member_permission)
+        _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
     timeline = await timeline_service.retrieve_one(Timeline.id, timeline_id)
     if not timeline:
