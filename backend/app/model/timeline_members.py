@@ -11,7 +11,10 @@ class TimelineMembers(Base):
     __tablename__ = "timeline_members"
 
     timeline_id: Mapped[int] = mapped_column(
-        ForeignKey("timelines.id"),
+        ForeignKey(
+            "timelines.id",
+            ondelete="CASCADE",
+        ),
         primary_key=True
     )
     member_permission: Mapped[str] = mapped_column(
@@ -19,7 +22,10 @@ class TimelineMembers(Base):
         default=MemberPermission.MEMBER,
     )
     member_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id"),
+        ForeignKey(
+            "users.id",
+            ondelete="CASCADE",
+        ),
         primary_key=True,
     )
 

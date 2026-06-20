@@ -21,10 +21,14 @@ class Event(Base):
     )
     location: Mapped[str] = mapped_column(String(), nullable=True)
     description: Mapped[str] = mapped_column(String(), nullable=True)
-    timeline_id: Mapped[int] = mapped_column(ForeignKey("timelines.id"))
-
+    timeline_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "timelines.id",
+            ondelete="CASCADE",
+        )
+    )
     timeline: Mapped["Timeline"] = relationship(
-        back_populates="events"
+        back_populates="events",
     )
     attachments: Mapped[list["Attachment"]] = relationship(
         back_populates="event",
