@@ -31,7 +31,7 @@ router.include_router(
 async def upload_attachment():
     content = """
 <body>
-<form action="/timeline/1/event/1/attachment/?caption=Some caption" enctype="multipart/form-data" method="post">
+<form action="/timeline/1/event/4/attachment/?caption=Some caption" enctype="multipart/form-data" method="post">
 <input name="file" type="file" multiple>
 <input type="submit">
 </form>

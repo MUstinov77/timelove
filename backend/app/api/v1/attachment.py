@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, File, UploadFile
-from fastapi.responses import HTMLResponse
 
+from backend.app.schema.attachment import AttachmentCreateSchema
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.permission import check_permission_dependency
@@ -49,6 +49,26 @@ async def get_attachment(
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
     attachment = await attachment_service.retrieve_one(Attachment.id, attachment_id)
+    if not attachment:
+        raise NotFoundException
+    return attachment
+
+
+@router.patch(
+    "/{attachment_id}",
+    response_model=AttachmentResponseSchema,
+)
+async def update_attachment(
+        attachment_id: int,
+        event_id: int,
+        update_data: AttachmentCreateSchema,
+        attachment_service: AttachmentService = Depends(get_attachment_service),
+        _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
+):
+    attachment = await attachment_service.update_instance(
+        update_data.model_dump(),
+        attachment_id
+    )
     if not attachment:
         raise NotFoundException
     return attachment
