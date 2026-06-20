@@ -1,3 +1,4 @@
+import os
 import os.path
 import uuid
 from mimetypes import guess_extension, guess_type
@@ -35,7 +36,6 @@ class AttachmentService(BaseService):
             "sort_order": 0,
         }
 
-        # attachment_create_data.update(data.model_dump())
         attachment_create_data.update(request_data)
         attachment = await self.create_instance(attachment_create_data)
         try:
@@ -45,4 +45,15 @@ class AttachmentService(BaseService):
         except Exception as e:
             await self.session.rollback()
             raise HTTPException(status_code=400, detail="Attachment creation failed")
+        return attachment
+
+    async def delete_attachment(self, obj_id: int):
+        attachment = await self.delete_instance(obj_id)
+        if not attachment:
+            raise HTTPException(status_code=404, detail="Attachment not found")
+        try:
+            os.remove(attachment.storage_key)
+        except Exception as e:
+            await self.session.rollback()
+            raise HTTPException(status_code=400, detail="Attachment deletion failed")
         return attachment

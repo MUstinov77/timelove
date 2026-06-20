@@ -13,7 +13,7 @@ from backend.app.service.event import EventService, get_event_service
 router = APIRouter(
     prefix="/event",
     dependencies=(
-        Depends(authenticate_user),
+        # Depends(authenticate_user),
     )
 )
 

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi.responses import HTMLResponse
 
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
@@ -19,7 +20,6 @@ router = APIRouter(
     response_model=AttachmentResponseSchema,
 )
 async def create_attachment(
-        event_id: int,
         caption: str | None,
         file: UploadFile = File(...),
         event = Depends(retrieve_event),
@@ -28,7 +28,7 @@ async def create_attachment(
     sort_order = len(event.attachments) + 1 if event.attachments else 0
     request_data = {
         "caption": caption,
-        "event_id": event_id,
+        "event_id": event.id,
         "sort_order": sort_order,
     }
     attachment = await attachment_service.create_attachment(file, request_data)
@@ -48,6 +48,21 @@ async def get_attachment(
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
     attachment = await attachment_service.retrieve_one(Attachment.id, attachment_id)
+    if not attachment:
+        raise NotFoundException
+    return attachment
+
+
+@router.delete(
+    "/{attachment_id}",
+    status_code=204,
+)
+async def delete_attachment(
+        attachment_id: int,
+        attachment_service: AttachmentService = Depends(get_attachment_service),
+        _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
+):
+    attachment = await attachment_service.delete_attachment(attachment_id)
     if not attachment:
         raise NotFoundException
     return attachment
