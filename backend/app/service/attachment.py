@@ -1,15 +1,14 @@
 import os.path
 import uuid
-from mimetypes import guess_type, guess_extension
+from mimetypes import guess_extension, guess_type
 
 from fastapi import Depends, HTTPException
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.core.configuration import settings
 from backend.app.core.datastore import postgres_session_provider
-from backend.app.service.base import BaseService
 from backend.app.model.attachment import Attachment
+from backend.app.service.base import BaseService
 
 
 def get_attachment_service(

@@ -1,13 +1,13 @@
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, Depends, File, UploadFile
 
-from backend.app.model.attachment import Attachment
+from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.permission import check_permission_dependency
-from backend.app.core.enum.permission import MemberPermission
-from backend.app.shortcuts.event import retrieve_event
+from backend.app.model.attachment import Attachment
 from backend.app.schema.attachment import AttachmentResponseSchema
-from backend.app.service.attachment import AttachmentService, get_attachment_service
-
+from backend.app.service.attachment import (AttachmentService,
+                                            get_attachment_service)
+from backend.app.shortcuts.event import retrieve_event
 
 router = APIRouter(
     prefix="/attachment",

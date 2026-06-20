@@ -8,7 +8,6 @@ from backend.app.model.user import User
 from backend.app.schema.auth import Token, UserSignupSchema
 from backend.app.service.user import UserService, get_user_service
 
-
 BASE_PREFIX = "/auth"
 
 router = APIRouter(

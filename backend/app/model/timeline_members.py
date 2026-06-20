@@ -1,8 +1,7 @@
+from sqlalchemy import ForeignKey, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.app.core.enum.permission import MemberPermission
-from sqlalchemy import ForeignKey, UniqueConstraint, String
-
 from backend.app.model.base import Base
 
 

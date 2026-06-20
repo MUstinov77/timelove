@@ -1,14 +1,10 @@
-from backend.app.core.auth.request_validator import authenticate_user
 from fastapi import Depends, status
-
-from backend.app.service.member import MemberService, get_member_service
-from backend.app.service.timeline import TimelineService, get_timeline_service
-from backend.app.core.exceptions import NotFoundException, PermissionException
-from backend.app.core.enum.permission import MemberPermission
-from backend.app.model.timeline import Timeline
-
 from fastapi.exceptions import HTTPException
 
+from backend.app.core.auth.request_validator import authenticate_user
+from backend.app.core.enum.permission import MemberPermission
+from backend.app.core.exceptions import PermissionException
+from backend.app.service.member import MemberService, get_member_service
 
 
 async def get_member_permission(

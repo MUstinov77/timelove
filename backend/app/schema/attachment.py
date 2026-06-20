@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 from backend.app.core.enum.attachment import AttachmentType
 

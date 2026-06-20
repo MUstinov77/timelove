@@ -1,15 +1,14 @@
 from fastapi import APIRouter, Depends
 
-from backend.app.core.enum.permission import MemberPermission
-from backend.app.core.utils.permission import check_permission_dependency
+from backend.app.api.v1.attachment import router as attachment_router
 from backend.app.core.auth.request_validator import authenticate_user
+from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
+from backend.app.core.utils.permission import check_permission_dependency
 from backend.app.model.event import Event
 from backend.app.schema.event import (EventCreateUpdateSchema,
                                       EventResponseSchema)
 from backend.app.service.event import EventService, get_event_service
-from backend.app.api.v1.attachment import router as attachment_router
-
 
 router = APIRouter(
     prefix="/event",

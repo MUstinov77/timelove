@@ -1,7 +1,8 @@
 from fastapi import Depends
-from backend.app.service.event import get_event_service, EventService
-from backend.app.model.event import Event
+
 from backend.app.core.exceptions import NotFoundException
+from backend.app.model.event import Event
+from backend.app.service.event import EventService, get_event_service
 
 
 async def retrieve_event(
