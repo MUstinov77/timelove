@@ -12,12 +12,19 @@ from backend.app.schema.event import (EventCreateUpdateSchema,
 from backend.app.service.event import EventService, get_event_service
 from backend.app.shortcuts.event import retrieve_event
 
+from backend.app.api.v1.attachment import router as attachment_router
+
 
 router = APIRouter(
     prefix="/event",
     dependencies=(
         Depends(authenticate_user),
     )
+)
+
+router.include_router(
+    attachment_router,
+    prefix="/{event_id}",
 )
 
 
@@ -79,40 +86,3 @@ async def delete_event(
     if not event:
         raise NotFoundException
     return event
-
-
-@router.get(
-    "/{event_id}/attachment",
-    response_model=list[AttachmentResponseSchema],
-)
-async def get_event_attachments(
-        event_id: int,
-        event_service: EventService = Depends(get_event_service)
-):
-    event = await event_service.retrieve_one(Event.id, event_id)
-    if not event:
-        raise NotFoundException
-    return event.attachments
-
-
-@router.post(
-    "/{event_id}/attachment",
-    response_model=AttachmentResponseSchema,
-)
-async def create_attachment(
-        event_id: int,
-        caption: str | None,
-        file: UploadFile = File(...),
-        event = Depends(retrieve_event),
-        attachment_service: AttachmentService = Depends(get_attachment_service),
-):
-    sort_order = len(event.attachments) + 1 if event.attachments else 0
-    request_data = {
-        "caption": caption,
-        "event_id": event_id,
-        "sort_order": sort_order,
-    }
-    attachment = await attachment_service.create_attachment(file, request_data)
-    if not attachment:
-        raise NotFoundException
-    return attachment
