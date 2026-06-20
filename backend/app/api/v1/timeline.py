@@ -23,7 +23,10 @@ router = APIRouter(
     )
 )
 
-router.include_router(event_router)
+router.include_router(
+    event_router,
+    prefix="/{timeline_id}"
+)
 
 
 @router.get(
