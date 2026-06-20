@@ -44,6 +44,7 @@ async def create_attachment(
 )
 async def get_attachment(
         attachment_id: int,
+        event_id: int,
         attachment_service: AttachmentService = Depends(get_attachment_service),
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
@@ -59,6 +60,7 @@ async def get_attachment(
 )
 async def delete_attachment(
         attachment_id: int,
+        event_id: int,
         attachment_service: AttachmentService = Depends(get_attachment_service),
         _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
 ):
