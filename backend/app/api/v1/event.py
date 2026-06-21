@@ -76,7 +76,7 @@ async def delete_event(
         event_service: EventService = Depends(get_event_service),
         _moder_permission = Depends(check_permission_dependency(MemberPermission.ADMIN)),
 ):
-    event = await event_service.delete_instance(event_id)
+    event = await event_service.delete(event_id)
     if not event:
         raise NotFoundException
     return event

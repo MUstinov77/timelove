@@ -39,7 +39,7 @@ class AttachmentService(BaseService):
         }
 
         attachment_create_data.update(request_data)
-        attachment = await self.create_instance(attachment_create_data)
+        attachment = await self.create(attachment_create_data)
         try:
             file_content = await file.read()
             with open(attachment.storage_key, "wb") as f:
@@ -50,9 +50,7 @@ class AttachmentService(BaseService):
         return attachment
 
     async def delete_attachment(self, obj_id: int):
-        attachment = await self.delete_instance(obj_id)
-        if not attachment:
-            raise HTTPException(status_code=404, detail="Attachment not found")
+        attachment = await self.delete(obj_id)
         try:
             os.remove(attachment.storage_key)
         except Exception as e:

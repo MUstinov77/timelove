@@ -53,19 +53,6 @@ class BaseService:
         return result.scalars().all()
 
 
-    async def delete_instance(self, obj_id: int, *args):
-        try:
-            record = await self.delete(obj_id)
-            await self.session.commit()
-            return record
-        except SQLAlchemyError:
-            await self.session.rollback()
-            raise HTTPException(
-                status_code=400,
-                detail="Error while deleting instance",
-            )
-
-
     async def update_instance(self, values: dict, obj_id :int):
         try:
             record = await self.update(values, obj_id)

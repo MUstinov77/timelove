@@ -135,7 +135,7 @@ async def delete_timeline(
     timeline_service: TimelineService = Depends(get_timeline_service),
     _admin_permission = Depends(check_permission_dependency(MemberPermission.ADMIN))
 ):
-    timeline = await timeline_service.delete_instance(timeline_id)
+    timeline = await timeline_service.delete(timeline_id)
     if not timeline:
         raise NotFoundException
     return timeline
