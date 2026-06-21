@@ -27,7 +27,7 @@ async def signup(
     user_data = create_data.model_dump()
     hashed_password = await get_hashed_password(user_data.pop("password"))
     user_data["hashed_password"] = hashed_password
-    await user_service.create_instance(user_data)
+    await user_service.create(user_data)
     return {"message": "User created"}
 
 

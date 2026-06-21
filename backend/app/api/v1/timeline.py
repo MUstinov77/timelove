@@ -71,7 +71,7 @@ async def create_timeline(
 ):
     user_id = auth_user.get("user_id")
     timeline_data = create_data.model_dump()
-    timeline = await timeline_service.create_instance(timeline_data)
+    timeline = await timeline_service.create(timeline_data)
     if not timeline:
         raise NotFoundException
     member_create_data = InviteUserToTimelineSchema(
@@ -79,7 +79,7 @@ async def create_timeline(
         member_permission=MemberPermission.ADMIN
     ).model_dump()
     member_create_data["timeline_id"] = timeline.id
-    await member_service.create_instance(member_create_data)
+    await member_service.create(member_create_data)
     return timeline
 
 
@@ -94,7 +94,7 @@ async def add_user_to_timeline(
 ):
     membership_data = invite_data.model_dump()
     membership_data["timeline_id"] = timeline_id
-    await member_service.create_instance(membership_data)
+    await member_service.create(membership_data)
     return {"message": "User added to timeline"}
 
 

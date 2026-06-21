@@ -34,7 +34,7 @@ async def create_event(
 ):
     event_data = create_data.model_dump()
     event_data["timeline_id"] = timeline_id
-    event = await event_service.create_instance(event_data)
+    event = await event_service.create(event_data)
     if not event:
         raise NotFoundException
     return event

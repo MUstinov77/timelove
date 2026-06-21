@@ -52,18 +52,6 @@ class BaseService:
         result = await self.session.execute(query)
         return result.scalars().all()
 
-    async def create_instance(self, values: dict, *args):
-        try:
-            record = await self.create(values)
-            await self.session.commit()
-            return record
-        except SQLAlchemyError as e:
-            print(e)
-            await self.session.rollback()
-            raise HTTPException(
-                status_code=400,
-                detail="Error while creating instance",
-            )
 
     async def delete_instance(self, obj_id: int, *args):
         try:
