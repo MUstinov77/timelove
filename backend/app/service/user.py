@@ -9,8 +9,9 @@ from .base import BaseService
 def get_user_service(
         session: AsyncSession = Depends(postgres_session_provider)
 ):
-    return UserService(session, User)
+    return UserService(session)
 
 
 class UserService(BaseService):
-    pass
+
+    model = User

@@ -13,10 +13,12 @@ from .base import BaseService
 async def get_member_service(
     session: AsyncSession = Depends(postgres_session_provider)
 ):
-    return MemberService(session, TimelineMembers)
+    return MemberService(session)
 
 
 class MemberService(BaseService):
+
+    model = TimelineMembers
 
     async def retrieve_member_permission(self, timeline_id: int, user_id: int):
         query = select(self.model.member_permission).where(

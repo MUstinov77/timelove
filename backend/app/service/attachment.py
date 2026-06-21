@@ -15,10 +15,12 @@ from backend.app.service.base import BaseService
 def get_attachment_service(
         session: AsyncSession = Depends(postgres_session_provider),
 ):
-    return AttachmentService(session, Attachment)
+    return AttachmentService(session)
 
 
 class AttachmentService(BaseService):
+
+    model = Attachment
 
     async def create_attachment(self, file, request_data):
         mime_type, _ = guess_type(file.filename)

@@ -9,8 +9,9 @@ from .base import BaseService
 def get_event_service(
         session: AsyncSession = Depends(postgres_session_provider)
 ):
-    return EventService(session, Event)
+    return EventService(session)
 
 
 class EventService(BaseService):
-    pass
+
+    model = Event

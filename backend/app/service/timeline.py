@@ -10,8 +10,9 @@ from .base import BaseService
 def get_timeline_service(
         session: AsyncSession = Depends(postgres_session_provider)
 ):
-    return TimelineService(session, Timeline)
+    return TimelineService(session)
 
 
 class TimelineService(BaseService):
-    pass
+
+    model = Timeline

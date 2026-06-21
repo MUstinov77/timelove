@@ -1,16 +1,21 @@
-from typing import Any
+from typing import Any, TypeVar
 
 from fastapi import HTTPException
 from sqlalchemy import delete, select, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.app.model.base import Base
+
+
+ModelType = TypeVar("ModelType", bound=Base)
 
 class BaseService:
 
-    def __init__(self, session, model):
+    model: ModelType = None
+
+    def __init__(self, session):
         self.session: AsyncSession = session
-        self.model = model
 
     async def create(self, values: dict):
         record = self.model(**values)
