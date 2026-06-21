@@ -18,7 +18,7 @@ from backend.app.service.user import UserService, get_user_service
 router = APIRouter(
     prefix="/timeline",
     dependencies=(
-        # Depends(authenticate_user),
+        Depends(authenticate_user),
     )
 )
 
@@ -27,21 +27,21 @@ router.include_router(
     prefix="/{timeline_id}"
 )
 
-@router.get("/attachments")
-async def upload_attachment():
-    content = """
-<body>
-<form action="/timeline/1/event/4/attachment/?caption=Some caption" enctype="multipart/form-data" method="post">
-<input name="file" type="file" multiple>
-<input type="submit">
-</form>
-<form action="/uploadfiles/" enctype="multipart/form-data" method="post">
-<input name="files" type="file" multiple>
-<input type="submit">
-</form>
-</body>
-    """
-    return HTMLResponse(content=content)
+# @router.get("/attachments")
+# async def upload_attachment():
+#     content = """
+# <body>
+# <form action="/timeline/1/event/4/attachment/?caption=Some caption" enctype="multipart/form-data" method="post">
+# <input name="file" type="file" multiple>
+# <input type="submit">
+# </form>
+# <form action="/uploadfiles/" enctype="multipart/form-data" method="post">
+# <input name="files" type="file" multiple>
+# <input type="submit">
+# </form>
+# </body>
+#     """
+#     return HTMLResponse(content=content)
 
 
 @router.get(

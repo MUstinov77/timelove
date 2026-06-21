@@ -38,6 +38,10 @@ class BaseService:
         result = await self.session.execute(query)
         return result.scalars().first()
 
+    async def retrieve_one_by_id(self, obj_id: int):
+        record = await self.retrieve_one(self.model.id, obj_id)
+        return record
+
     async def retrieve_all(self, field: Any, field_value: Any):
         query = select(self.model).where(field == field_value)
         result = await self.session.execute(query)
