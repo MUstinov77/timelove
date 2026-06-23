@@ -18,10 +18,14 @@ class BaseService:
         self.session: AsyncSession = session
 
     async def create(self, values: dict):
-        record = self.model(**values)
-        self.session.add(record)
-        await self.session.commit()
-        return record
+        try:
+            record = self.model(**values)
+            self.session.add(record)
+            await self.session.commit()
+            return record
+        except SQLAlchemyError:
+            await self.session.rollback()
+            raise HTTPException(400, "Error while creating instance")
 
     async def update(self, values: dict, obj_id: int):
         query = (
