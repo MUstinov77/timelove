@@ -9,6 +9,7 @@ from backend.app.model.event import Event
 from backend.app.schema.event import (EventCreateUpdateSchema,
                                       EventResponseSchema)
 from backend.app.service.event import EventService, get_event_service
+from backend.app.service.timeline import TimelineService, get_timeline_service
 
 router = APIRouter(
     prefix="/event",
@@ -21,6 +22,18 @@ router.include_router(
     prefix="/{event_id}",
 )
 
+@router.get(
+    "/",
+    response_model=list[EventResponseSchema]
+)
+async def get_events(
+    timeline_id: int,
+    timeline_service: TimelineService = Depends(get_timeline_service)
+):
+    timeline = await timeline_service.retrieve_one_by_id(timeline_id)
+    if not timeline:
+        raise NotFoundException
+    return timeline.events
 
 @router.post(
     "/",
