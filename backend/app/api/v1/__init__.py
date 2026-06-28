@@ -18,7 +18,7 @@ async def health_check():
 
 @api_router.get(
     "/attachment/{attachment_id}/file",
-    response_model=AttachmentResponseSchema
+    # response_model=AttachmentResponseSchema
 )
 async def get_attachment_file(
         attachment_id: int,
@@ -28,5 +28,5 @@ async def get_attachment_file(
     attachment = await attachment_service.retrieve_one_by_id(attachment_id)
     if not attachment:
         raise HTTPException(status_code=401, detail="Attachment not found")
-    return attachment
+    return FileResponse(attachment.storage_key)
 
