@@ -15,7 +15,7 @@ export function AttachmentPreview({ attachment }: AttachmentPreviewProps) {
   }
 
   if (isImageMime(attachment.mime_type)) {
-    return <ImagePreview src={attachment.storage_key} alt={attachment.caption ?? 'Вложение'} />
+    return <ImagePreview src={url} alt={attachment.caption ?? 'Вложение'} />
   }
 
   return (
