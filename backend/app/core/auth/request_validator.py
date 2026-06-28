@@ -1,7 +1,5 @@
 from typing import Annotated
 
-from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidTokenError
-
 from backend.app.core.auth.jwt import JWTService
 from fastapi import Depends, status
 from fastapi.exceptions import HTTPException
@@ -17,5 +15,5 @@ async def authenticate_user(
         payload = JWTService().decode_token(token)
         user_dict = payload.get("context")
         return user_dict
-    except (ExpiredSignatureError, DecodeError, InvalidTokenError):
+    except ValueError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
