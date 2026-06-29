@@ -1,8 +1,9 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import JSONResponse
 
 from backend.app.api.v1 import api_router
 from backend.app.core.configuration import get_settings
@@ -36,6 +37,12 @@ def create_app():
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    @app.exception_handler(Exception)
+    async def exception_handler(request: Request, exc: Exception):
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"detail": "An unexpected error occurred."},
+        )
 
     app.include_router(api_router)
 
