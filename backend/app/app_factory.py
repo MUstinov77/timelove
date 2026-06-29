@@ -37,6 +37,7 @@ def create_app():
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
     @app.exception_handler(Exception)
     async def exception_handler(request: Request, exc: Exception):
         return JSONResponse(
