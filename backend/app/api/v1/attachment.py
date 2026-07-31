@@ -113,7 +113,6 @@ async def get_attachment_file(
         attachment_service: AttachmentService = Depends(get_attachment_service),
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
-    print("Here")
     attachment = await attachment_service.retrieve_one_by_id(attachment_id)
     if not attachment:
         raise HTTPException(status_code=401, detail="Attachment not found")
