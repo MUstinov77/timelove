@@ -7,38 +7,6 @@ from backend.app.core.exceptions import PermissionException
 from backend.app.service.member import MemberService, get_member_service
 
 
-async def get_member_permission(
-        timeline_id: int,
-        auth_user: dict = Depends(authenticate_user),
-        member_service: MemberService = Depends(get_member_service),
-):
-    user_id = auth_user.get("user_id")
-    membership = await member_service.retrieve_membership(timeline_id, user_id)
-    if not membership:
-        raise PermissionException
-    return membership.member_permission
-
-
-async def check_member_permission(
-        member_permission: MemberPermission = Depends(get_member_permission)
-):
-    return member_permission
-
-
-async def check_moder_permission(
-        member_permission: MemberPermission = Depends(get_member_permission)
-):
-    if member_permission == MemberPermission.MEMBER:
-        raise PermissionException
-    return True
-
-async def check_admin_permission(
-        member_permission: MemberPermission = Depends(get_member_permission)
-):
-    if member_permission != MemberPermission.ADMIN:
-        raise PermissionException
-    return True
-
 def check_permission_dependency(
         permission: MemberPermission
 ):
@@ -59,13 +27,14 @@ def match_user_permission(
         user_permission: MemberPermission,
         necessary_permission: MemberPermission
 ):
+    unknown_permission_type = -1
     permissions_order = {
-        MemberPermission.MEMBER: 0,
-        MemberPermission.MODERATOR: 1,
-        MemberPermission.ADMIN: 2,
+        MemberPermission.MEMBER: 1,
+        MemberPermission.MODERATOR: 2,
+        MemberPermission.ADMIN: 3,
     }
-    necessary_permission_value = permissions_order.get(user_permission)
-    user_permission_value = permissions_order.get(user_permission)
-    if not necessary_permission_value or not user_permission_value:
+    necessary_permission_value = permissions_order.get(necessary_permission, unknown_permission_type)
+    user_permission_value = permissions_order.get(user_permission, unknown_permission_type)
+    if necessary_permission_value == unknown_permission_type or user_permission_value == unknown_permission_type:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="I dont know this permission level")
     return user_permission_value >= necessary_permission_value
