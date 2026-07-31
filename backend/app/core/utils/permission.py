@@ -36,5 +36,7 @@ def match_user_permission(
     necessary_permission_value = permissions_order.get(necessary_permission, unknown_permission_type)
     user_permission_value = permissions_order.get(user_permission, unknown_permission_type)
     if necessary_permission_value == unknown_permission_type or user_permission_value == unknown_permission_type:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="I dont know this permission level")
-    return user_permission_value >= necessary_permission_value
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Unknown permission level")
+    if user_permission_value < necessary_permission_value:
+        raise PermissionException
+    return True
