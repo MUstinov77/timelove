@@ -50,13 +50,13 @@ router.include_router(
 )
 async def get_my_timelines(
     auth_user = Depends(authenticate_user),
-    user_service: UserService = Depends(get_user_service),
+    timeline_service: TimelineService = Depends(get_timeline_service),
 ):
     user_id = auth_user.get("user_id")
-    user = await user_service.retrieve_one(User.id, user_id)
-    if not user:
+    timelines = await timeline_service.get_timelines_by_user_id(user_id)
+    if not timelines:
         raise NotFoundException
-    return user.timelines
+    return timelines
 
 
 @router.post(
