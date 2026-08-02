@@ -23,7 +23,7 @@ router = APIRouter(
 async def get_attachments(
     timeline_id: int,
     event = Depends(retrieve_event),
-
+    _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
     if not event:
         raise NotFoundException
@@ -34,10 +34,12 @@ async def get_attachments(
     response_model=AttachmentResponseSchema,
 )
 async def create_attachment(
+        timeline_id: int,
         caption: str | None = "",
         file: UploadFile = File(...),
         event = Depends(retrieve_event),
         attachment_service: AttachmentService = Depends(get_attachment_service),
+        _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR)),
 ):
     sort_order = len(event.attachments) + 1 if event.attachments else 0
     request_data = {
@@ -57,6 +59,7 @@ async def create_attachment(
     response_model=AttachmentResponseSchema,
 )
 async def get_attachment(
+        timeline_id: int,
         attachment_id: int,
         event_id: int,
         attachment_service: AttachmentService = Depends(get_attachment_service),
@@ -73,6 +76,7 @@ async def get_attachment(
     response_model=AttachmentResponseSchema,
 )
 async def update_attachment(
+        timeline_id: int,
         attachment_id: int,
         event_id: int,
         update_data: AttachmentCreateSchema,
@@ -93,6 +97,7 @@ async def update_attachment(
     status_code=204,
 )
 async def delete_attachment(
+        timeline_id: int,
         attachment_id: int,
         event_id: int,
         attachment_service: AttachmentService = Depends(get_attachment_service),
@@ -108,6 +113,7 @@ async def delete_attachment(
     "/{attachment_id}/file",
 )
 async def get_attachment_file(
+        timeline_id: int,
         attachment_id: int,
         event_id: int,
         attachment_service: AttachmentService = Depends(get_attachment_service),
