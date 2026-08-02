@@ -15,7 +15,7 @@ async def init_db():
         print("Database already initialized")
         return
 
-    async_engine = create_async_engine(settings.DB_URI)
+    async_engine = create_async_engine(settings.DB_URI, echo=True)
 
     async_session_maker = async_sessionmaker(
         async_engine,
