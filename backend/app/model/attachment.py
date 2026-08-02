@@ -42,5 +42,5 @@ class Attachment(Base):
 
     event: Mapped["Event"] = relationship(
         back_populates="attachments",
-        lazy="selectin",
+        lazy="raise",
     )

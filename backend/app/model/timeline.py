@@ -18,7 +18,7 @@ class Timeline(Base):
     title: Mapped[str] = mapped_column(String(), nullable=False)
     events: Mapped[list["Event"]] = relationship(
         back_populates="timeline",
-        lazy="selectin"
+        lazy="raise"
     )
     members: Mapped[list["User"]] = relationship(
         back_populates="timelines",
