@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends
 
 from backend.app.api.v1.attachment import router as attachment_router
-from backend.app.core.auth.request_validator import authenticate_user
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.permission import check_permission_dependency
@@ -28,7 +27,8 @@ router.include_router(
 )
 async def get_events(
     timeline_id: int,
-    timeline_service: TimelineService = Depends(get_timeline_service)
+    timeline_service: TimelineService = Depends(get_timeline_service),
+    _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
     timeline = await timeline_service.retrieve_one_by_id(timeline_id)
     if not timeline:
@@ -58,8 +58,10 @@ async def create_event(
     response_model=EventResponseSchema,
 )
 async def get_event(
+        timeline_id: int,
         event_id: int,
-        event_service: EventService = Depends(get_event_service)
+        event_service: EventService = Depends(get_event_service),
+        _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
     event = await event_service.retrieve_one(Event.id, event_id)
     if not event:
@@ -87,7 +89,7 @@ async def update_event(
 async def delete_event(
         event_id: int,
         event_service: EventService = Depends(get_event_service),
-        _moder_permission = Depends(check_permission_dependency(MemberPermission.ADMIN)),
+        _admin_permission = Depends(check_permission_dependency(MemberPermission.ADMIN)),
 ):
     event = await event_service.delete(event_id)
     if not event:
