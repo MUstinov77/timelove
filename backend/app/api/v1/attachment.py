@@ -21,9 +21,10 @@ router = APIRouter(
     response_model=list[AttachmentResponseSchema]
 )
 async def get_attachments(
-    timeline_id: int,
-    event = Depends(retrieve_event),
-    _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
+        timeline_id: int,
+        event_id: int,
+        event = Depends(retrieve_event),
+        _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
     if not event:
         raise NotFoundException
