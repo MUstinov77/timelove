@@ -61,7 +61,6 @@ class BaseService:
         try:
             record = await self.update(values, obj_id)
             await self.session.commit()
-            await self.session.refresh(record)
             return record
         except SQLAlchemyError:
             await self.session.rollback()
