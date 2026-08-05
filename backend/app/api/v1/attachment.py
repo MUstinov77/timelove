@@ -23,12 +23,13 @@ router = APIRouter(
 async def get_attachments(
         timeline_id: int,
         event_id: int,
-        event = Depends(retrieve_event),
+        attachment_service: AttachmentService = Depends(get_attachment_service),
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
-    if not event:
+    attachments = await attachment_service.retrieve_event_attachments(timeline_id, event_id)
+    if not attachments:
         raise NotFoundException
-    return event.attachments
+    return attachments
 
 @router.post(
     "/",
