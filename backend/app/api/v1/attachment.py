@@ -37,6 +37,7 @@ async def get_attachments(
 )
 async def create_attachment(
         timeline_id: int,
+        event_id: int,
         caption: str | None = "",
         file: UploadFile = File(...),
         event = Depends(retrieve_event),
