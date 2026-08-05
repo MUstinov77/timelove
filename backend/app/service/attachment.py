@@ -39,7 +39,6 @@ class AttachmentService(BaseService):
                 "mime_type": mime_type,
                 "storage_key": storage_key,
                 "file_size": file.size,
-                "sort_order": 0,
             }
 
             attachment_create_data.update(request_data)
