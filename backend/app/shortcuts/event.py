@@ -17,3 +17,18 @@ async def retrieve_event(
     if not event:
         raise NotFoundException
     return event
+
+async def get_event(
+        required_permission: MemberPermission,
+):
+    async def dependency(
+            timeline_id: int,
+            event_id: int,
+            event_service: EventService = Depends(get_event_service),
+            _check_user_permission = Depends(check_permission_dependency(required_permission))
+    ):
+        event = await event_service.retrieve_event(timeline_id, event_id)
+        if not event:
+            raise NotFoundException
+        return event
+    return dependency
