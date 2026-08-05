@@ -27,13 +27,13 @@ router.include_router(
 )
 async def get_events(
     timeline_id: int,
-    timeline_service: TimelineService = Depends(get_timeline_service),
+    event_service: EventService = Depends(get_event_service),
     _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
-    timeline = await timeline_service.retrieve_one_by_id(timeline_id)
-    if not timeline:
+    events = await event_service.retrieve_timeline_events(timeline_id)
+    if not events:
         raise NotFoundException
-    return timeline.events
+    return events
 
 @router.post(
     "/",
