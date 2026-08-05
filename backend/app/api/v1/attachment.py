@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, File, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.exceptions import HTTPException
 
+from backend.app.model.event import Event
 from backend.app.schema.attachment import AttachmentCreateSchema
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
@@ -36,21 +37,16 @@ async def get_attachments(
     response_model=AttachmentResponseSchema,
 )
 async def create_attachment(
-        timeline_id: int,
-        event_id: int,
-        caption: str | None = "",
+        data: AttachmentCreateSchema,
         file: UploadFile = File(...),
-        event = Depends(retrieve_event),
+        event: Event = Depends(retrieve_event(MemberPermission.MODERATOR)),
         attachment_service: AttachmentService = Depends(get_attachment_service),
-        _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR)),
 ):
-    sort_order = len(event.attachments) + 1 if event.attachments else 0
-    request_data = {
-        "caption": "Это вложение",
-        "event_id": event.id,
-        "sort_order": sort_order,
-    }
-    attachment = await attachment_service.create_attachment(file, request_data)
+    sort_order = len(event.attachments) + 1
+    create_data = data.model_dump()
+    create_data["sort_order"] = sort_order
+    create_data["event_id"] = event.id
+    attachment = await attachment_service.create_attachment(file, create_data)
     if not attachment:
         raise NotFoundException
     return attachment
