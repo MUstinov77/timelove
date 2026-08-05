@@ -40,7 +40,10 @@ class EventService(BaseService):
     ):
         query = (
             select(self.model).
-            where(self.model.timeline_id == timeline_id)
+            where(
+                self.model.id == event_id,
+                self.model.timeline_id == timeline_id
+            )
         )
         result = await self.session.execute(query)
         return result.scalars().all()
