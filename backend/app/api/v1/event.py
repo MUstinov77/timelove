@@ -63,7 +63,7 @@ async def get_event(
         event_service: EventService = Depends(get_event_service),
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
-    event = await event_service.retrieve_one(Event.id, event_id)
+    event = await event_service.retrieve_event(timeline_id, event_id)
     if not event:
         raise NotFoundException
     return event
