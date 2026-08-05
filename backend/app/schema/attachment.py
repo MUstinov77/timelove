@@ -5,7 +5,6 @@ from backend.app.core.enum.attachment import AttachmentType
 
 class AttachmentCreateSchema(BaseModel):
     caption: str | None
-    event_id: int
 
 
 class AttachmentResponseSchema(BaseModel):
