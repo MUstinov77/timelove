@@ -74,24 +74,28 @@ async def get_event(
     response_model=EventResponseSchema
 )
 async def update_event(
+        timeline_id: int,
         event_id: int,
         update_data: EventCreateUpdateSchema,
         event_service: EventService = Depends(get_event_service),
         _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR)),
 ):
-    event = await event_service.update_instance(update_data.model_dump(), event_id)
+    event = await event_service.retrieve_event(timeline_id, event_id)
     if not event:
         raise NotFoundException
+    event = await event_service.update_instance(update_data.model_dump(), event_id)
     return event
 
 
 @router.delete("/{event_id}")
 async def delete_event(
+        timeline_id: int,
         event_id: int,
         event_service: EventService = Depends(get_event_service),
         _admin_permission = Depends(check_permission_dependency(MemberPermission.ADMIN)),
 ):
-    event = await event_service.delete(event_id)
+    event = await event_service.retrieve_event(timeline_id, event_id)
     if not event:
         raise NotFoundException
+    event = await event_service.delete(event_id)
     return event
