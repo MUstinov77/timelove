@@ -4,11 +4,14 @@ import uuid
 from mimetypes import guess_extension, guess_type
 
 from fastapi import Depends, HTTPException
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.core.configuration import settings
 from backend.app.core.datastore import postgres_session_provider
 from backend.app.model.attachment import Attachment
+from backend.app.model.event import Event
+from backend.app.model.timeline import Timeline
 from backend.app.service.base import BaseService
 
 
@@ -57,3 +60,22 @@ class AttachmentService(BaseService):
             await self.session.rollback()
             raise HTTPException(status_code=400, detail="Attachment deletion failed")
         return attachment
+
+    async def retrieve_event_attachments(
+            self,
+            timeline_id: int,
+            event_id: int,
+    ):
+        query = (
+            select(self.model).
+            join(
+                Event,
+                Event.id == event_id,
+            ).
+            where(
+                Event.timeline_id == timeline_id,
+                self.model.event_id == event_id,
+            )
+        )
+        result = await self.session.execute(query)
+        return result.scalars().all()
