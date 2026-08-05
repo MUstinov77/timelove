@@ -1,3 +1,5 @@
+from sqlalchemy import select
+
 from backend.app.core.datastore import postgres_session_provider
 from backend.app.model.event import Event
 from fastapi import Depends
@@ -15,3 +17,18 @@ def get_event_service(
 class EventService(BaseService):
 
     model = Event
+
+    async def retrieve_event(
+            self,
+            timeline_id: int,
+            event_id: int
+    ):
+        query = (
+            select(self.model).
+            where(
+                self.model.id == event_id,
+                self.model.timeline_id == timeline_id
+            )
+        )
+        result = await self.session.execute(query)
+        return result.scalars().first()
