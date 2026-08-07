@@ -78,3 +78,21 @@ class AttachmentService(BaseService):
         )
         result = await self.session.execute(query)
         return result.scalars().all()
+
+    async def retrieve_attachment(
+            self,
+            timeline_id: int,
+            event_id: int,
+            attachment_id: int,
+    ):
+        query = (
+            select(self.model).
+            join(Event).
+            where(
+                self.model.id == attachment_id,
+                self.model.event_id == event_id,
+                Event.timeline_id == timeline_id,
+            )
+        )
+        result = await self.session.execute(query)
+        return result.scalars().first()
