@@ -64,7 +64,7 @@ async def get_attachment(
         attachment_service: AttachmentService = Depends(get_attachment_service),
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
-    attachment = await attachment_service.retrieve_one(Attachment.id, attachment_id)
+    attachment = await attachment_service.retrieve_attachment(timeline_id, event_id, attachment_id)
     if not attachment:
         raise NotFoundException
     return attachment
