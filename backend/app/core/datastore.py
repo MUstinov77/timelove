@@ -36,7 +36,6 @@ async def get_postgres_session():
     async with async_session_maker() as session:
         try:
             yield session
-            await session.commit()
         except Exception:
             await session.rollback()
             raise
