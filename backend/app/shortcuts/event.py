@@ -6,7 +6,7 @@ from backend.app.core.utils.permission import check_permission_dependency
 from backend.app.service.event import EventService, get_event_service
 
 
-async def retrieve_event(
+def retrieve_event(
         required_permission: MemberPermission,
 ):
     async def dependency(
