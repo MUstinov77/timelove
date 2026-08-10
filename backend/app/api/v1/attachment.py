@@ -88,7 +88,6 @@ async def update_attachment(
         attachment_id,
         update_data.model_dump()
     )
-    print("some atta")
     if not attachment:
         raise NotFoundException
     return attachment
