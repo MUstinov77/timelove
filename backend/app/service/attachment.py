@@ -31,11 +31,12 @@ class AttachmentService(BaseService):
 
             file_id = uuid.uuid4()
             file_extension = guess_extension(mime_type)
+            media_type = mime_type.split("/")[0]
             new_file_name = f"{file_id}{file_extension}"
             storage_key = os.path.join(settings.ATTACHMENTS_DIRECTORY_PATH, new_file_name)
 
             attachment_create_data = {
-                "media_type": "image",
+                "media_type": media_type,
                 "mime_type": mime_type,
                 "storage_key": storage_key,
                 "file_size": file.size,
