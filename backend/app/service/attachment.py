@@ -4,7 +4,7 @@ import uuid
 from mimetypes import guess_extension, guess_type
 
 from fastapi import Depends, HTTPException
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.core.configuration import settings
@@ -95,4 +95,26 @@ class AttachmentService(BaseService):
             )
         )
         result = await self.session.execute(query)
+        return result.scalars().first()
+
+    async def update_attachment(
+            self,
+            timeline_id: int,
+            event_id: int,
+            attachment_id: int,
+            updated_data: dict
+    ):
+        attachment = await self.retrieve_attachment(timeline_id, event_id, attachment_id)
+        if not attachment:
+            return None
+        query = (
+            update(self.model).
+            where(
+                self.model.id == attachment_id,
+            ).
+            values(**updated_data).
+            returning(self.model)
+        )
+        result = await self.session.execute(query)
+        await self.session.commit()
         return result.scalars().first()
