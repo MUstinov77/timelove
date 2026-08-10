@@ -47,7 +47,7 @@ class AttachmentService(BaseService):
             file_content = await file.read()
             with open(attachment.storage_key, "wb") as f:
                 f.write(file_content)
-        except Exception as e:
+        except Exception:
             await self.session.rollback()
             raise HTTPException(status_code=400, detail="Attachment creation failed")
         return attachment
