@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, File, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.exceptions import HTTPException
@@ -37,7 +39,7 @@ async def get_attachments(
     response_model=AttachmentResponseSchema,
 )
 async def create_attachment(
-        data: AttachmentCreateSchema,
+        data: AttachmentCreateSchema = Depends(AttachmentCreateSchema.as_form),
         file: UploadFile = File(...),
         event: Event = Depends(retrieve_event(MemberPermission.MODERATOR)),
         attachment_service: AttachmentService = Depends(get_attachment_service),
