@@ -1,10 +1,22 @@
+from typing import Annotated
+
 from pydantic import BaseModel
+from fastapi import Form
 
 from backend.app.core.enum.attachment import AttachmentType
 
 
 class AttachmentCreateSchema(BaseModel):
     caption: str | None
+
+    @classmethod
+    def as_form(
+            cls,
+            caption: Annotated[str | None, Form(...)]
+    ):
+        return cls(
+            caption=caption
+        )
 
 
 class AttachmentResponseSchema(BaseModel):
