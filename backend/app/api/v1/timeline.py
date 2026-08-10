@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-from fastapi.responses import HTMLResponse
 
 from backend.app.api.v1.event import router as event_router
 from backend.app.core.auth.request_validator import authenticate_user
@@ -7,13 +6,10 @@ from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.permission import check_permission_dependency
 from backend.app.model.timeline import Timeline
-from backend.app.model.user import User
 from backend.app.schema.member import InviteUserToTimelineSchema
-from backend.app.schema.timeline import (TimelineCreateUpdateSchema,
-                                         TimelineResponseSchema)
+from backend.app.schema.timeline import TimelineCreateUpdateSchema, TimelineResponseSchema
 from backend.app.service.member import MemberService, get_member_service
 from backend.app.service.timeline import TimelineService, get_timeline_service
-from backend.app.service.user import UserService, get_user_service
 
 router = APIRouter(
     prefix="/timeline",
@@ -26,22 +22,6 @@ router.include_router(
     event_router,
     prefix="/{timeline_id}"
 )
-
-# @router.get("/attachments")
-# async def upload_attachment():
-#     content = """
-# <body>
-# <form action="/timeline/1/event/4/attachment/?caption=Some caption" enctype="multipart/form-data" method="post">
-# <input name="file" type="file" multiple>
-# <input type="submit">
-# </form>
-# <form action="/uploadfiles/" enctype="multipart/form-data" method="post">
-# <input name="files" type="file" multiple>
-# <input type="submit">
-# </form>
-# </body>
-#     """
-#     return HTMLResponse(content=content)
 
 
 @router.get(

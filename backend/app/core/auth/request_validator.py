@@ -1,9 +1,10 @@
 from typing import Annotated
 
-from backend.app.core.auth.jwt import JWTService
 from fastapi import Depends, status
 from fastapi.exceptions import HTTPException
 from fastapi.security import OAuth2PasswordBearer
+
+from backend.app.core.auth.jwt import JWTService
 
 auth_schema = OAuth2PasswordBearer(tokenUrl="auth/login")
 

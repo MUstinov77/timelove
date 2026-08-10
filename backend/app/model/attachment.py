@@ -33,7 +33,7 @@ class Attachment(Base):
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
     caption: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    
+
     event_id: Mapped[int] = mapped_column(
         ForeignKey("events.id", ondelete="CASCADE"),
         nullable=False,

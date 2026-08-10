@@ -11,7 +11,6 @@ from backend.app.core.configuration import settings
 from backend.app.core.datastore import postgres_session_provider
 from backend.app.model.attachment import Attachment
 from backend.app.model.event import Event
-from backend.app.model.timeline import Timeline
 from backend.app.service.base import BaseService
 
 
@@ -56,7 +55,7 @@ class AttachmentService(BaseService):
         attachment = await self.delete(obj_id)
         try:
             os.remove(attachment.storage_key)
-        except Exception as e:
+        except Exception:
             await self.session.rollback()
             raise HTTPException(status_code=400, detail="Attachment deletion failed")
         return attachment

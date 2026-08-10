@@ -1,17 +1,14 @@
-from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, UploadFile
-from fastapi.responses import FileResponse
 from fastapi.exceptions import HTTPException
+from fastapi.responses import FileResponse
 
-from backend.app.model.event import Event
-from backend.app.schema.attachment import AttachmentCreateSchema
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.permission import check_permission_dependency
-from backend.app.schema.attachment import AttachmentResponseSchema
-from backend.app.service.attachment import (AttachmentService,
-                                            get_attachment_service)
+from backend.app.model.event import Event
+from backend.app.schema.attachment import AttachmentCreateSchema, AttachmentResponseSchema
+from backend.app.service.attachment import AttachmentService, get_attachment_service
 from backend.app.shortcuts.event import retrieve_event
 
 router = APIRouter(
@@ -54,7 +51,6 @@ async def create_attachment(
     if not attachment:
         raise NotFoundException
     return attachment
-
 
 
 @router.get(
