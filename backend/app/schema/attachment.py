@@ -12,7 +12,7 @@ class AttachmentCreateSchema(BaseModel):
     @classmethod
     def as_form(
             cls,
-            caption: Annotated[str | None, Form(...)]
+            caption: Annotated[str | None, Form(None)]
     ):
         return cls(
             caption=caption

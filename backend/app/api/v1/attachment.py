@@ -45,9 +45,12 @@ async def create_attachment(
         attachment_service: AttachmentService = Depends(get_attachment_service),
 ):
     sort_order = len(event.attachments) + 1
+
     create_data = data.model_dump()
+
     create_data["sort_order"] = sort_order
     create_data["event_id"] = event.id
+
     attachment = await attachment_service.create_attachment(file, create_data)
     if not attachment:
         raise NotFoundException
