@@ -82,9 +82,11 @@ async def update_attachment(
         attachment_service: AttachmentService = Depends(get_attachment_service),
         _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
 ):
-    attachment = await attachment_service.update_instance(
-        update_data.model_dump(),
-        attachment_id
+    attachment = await attachment_service.update_attachment(
+        timeline_id,
+        event_id,
+        attachment_id,
+        update_data.model_dump()
     )
     if not attachment:
         raise NotFoundException
