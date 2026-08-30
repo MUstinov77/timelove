@@ -104,7 +104,7 @@ async def delete_attachment(
         attachment_service: AttachmentService = Depends(get_attachment_service),
         _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
 ):
-    attachment = await attachment_service.delete_attachment(attachment_id)
+    attachment = await attachment_service.delete_attachment(timeline_id, event_id, attachment_id)
     if not attachment:
         raise NotFoundException
     return attachment
