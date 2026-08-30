@@ -4,7 +4,7 @@ import uuid
 from mimetypes import guess_extension, guess_type
 
 from fastapi import Depends, HTTPException
-from sqlalchemy import select, update
+from sqlalchemy import select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.core.configuration import settings
@@ -51,8 +51,21 @@ class AttachmentService(BaseService):
             raise HTTPException(status_code=400, detail="Attachment creation failed")
         return attachment
 
-    async def delete_attachment(self, obj_id: int):
-        attachment = await self.delete(obj_id)
+    async def delete_attachment(
+            self,
+            timeline_id: int,
+            event_id: int,
+            attachment_id: int,
+    ):
+        attachment = await self.retrieve_attachment(timeline_id, event_id, attachment_id)
+        if not attachment:
+            return None
+
+        deleted = await self.delete(attachment_id)
+        if not deleted:
+            return None
+
+        await self.session.commit()
         try:
             os.remove(attachment.storage_key)
         except Exception:
