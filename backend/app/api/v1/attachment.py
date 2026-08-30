@@ -26,8 +26,6 @@ async def get_attachments(
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
     attachments = await attachment_service.retrieve_event_attachments(timeline_id, event_id)
-    if not attachments:
-        raise NotFoundException
     return attachments
 
 @router.post(
