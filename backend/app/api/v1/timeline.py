@@ -34,8 +34,6 @@ async def get_my_timelines(
 ):
     user_id = auth_user.get("user_id")
     timelines = await timeline_service.get_timelines_by_user_id(user_id)
-    if not timelines:
-        raise NotFoundException
     return timelines
 
 
@@ -62,7 +60,7 @@ async def create_timeline(
     await member_service.create(member_create_data)
     return timeline
 
-
+# add some logic to acceptable invite(create invite instance)
 @router.post(
     "/{timeline_id}/add"
 )
