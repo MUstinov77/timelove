@@ -28,8 +28,6 @@ async def get_events(
     _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
     events = await event_service.retrieve_timeline_events(timeline_id)
-    if not events:
-        raise NotFoundException
     return events
 
 @router.post(
