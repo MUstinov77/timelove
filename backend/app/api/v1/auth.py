@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from backend.app.core.auth.jwt import JWTService
+from backend.app.core.exception.auth import LoginCredentialException
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.encrypt import get_hashed_password, verify_password
 from backend.app.model.user import User
@@ -41,9 +42,9 @@ async def login(
 ):
     user = await user_service.retrieve_one(User.email, login_data.username)
     if not user:
-        raise NotFoundException
+        raise LoginCredentialException
     if not await verify_password(login_data.password, user.hashed_password):
-        raise NotFoundException
+        raise LoginCredentialException
     token = JWTService().create_and_encode_token({
         "user_id": user.id,
         "username": user.email
