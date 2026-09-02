@@ -28,3 +28,12 @@ class TimelineService(BaseService):
         result = await self.session.execute(query)
         return result.all()
 
+    async def retrieve_timeline(self, obj_id: int):
+        query = (
+            select(self.model.id, self.model.title, TimelineMembers.member_permission).
+            join(TimelineMembers).
+            where(TimelineMembers.timeline_id == obj_id)
+        )
+        result = await self.session.execute(query)
+        return result.fetchone()
+

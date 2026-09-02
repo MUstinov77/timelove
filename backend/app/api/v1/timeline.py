@@ -85,7 +85,7 @@ async def get_timeline(
         timeline_service: TimelineService = Depends(get_timeline_service),
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
-    timeline = await timeline_service.retrieve_one(Timeline.id, timeline_id)
+    timeline = await timeline_service.retrieve_timeline(timeline_id)
     if not timeline:
         raise NotFoundException
     return timeline
