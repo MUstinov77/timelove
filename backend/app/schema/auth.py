@@ -10,8 +10,8 @@ class UserSignupSchema(BaseModel):
     email: EmailStr
     password: str
 
-    first_name: str | None
-    last_name: str | None
+    first_name: str | None = None
+    last_name: str | None = None
 
     class Config:
         extra = "ignore"
