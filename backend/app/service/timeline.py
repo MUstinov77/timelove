@@ -21,10 +21,10 @@ class TimelineService(BaseService):
 
     async def get_timelines_by_user_id(self, user_id: int):
         query = (
-            select(self.model).
+            select(self.model.id, self.model.title, TimelineMembers.member_permission).
             join(TimelineMembers).
             where(TimelineMembers.member_id == user_id)
         )
         result = await self.session.execute(query)
-        return result.scalars().all()
+        return result.all()
 
