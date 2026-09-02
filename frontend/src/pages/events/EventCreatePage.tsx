@@ -1,18 +1,24 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { PageContainer } from '@/components/layout/AppLayout'
 import { EventForm } from '@/components/event/EventForm'
 import { useEvents } from '@/hooks/useEvents'
+import { usePermissions } from '@/hooks/usePermissions'
+import { useTimelineContext } from '@/hooks/useTimelineContext'
 import type { EventCreatePayload } from '@/types/event'
 
 export function EventCreatePage() {
-  const { timelineId: timelineIdParam } = useParams()
-  const timelineId = Number(timelineIdParam)
+  const { timeline } = useTimelineContext()
   const navigate = useNavigate()
-  const { createEvent } = useEvents(timelineId)
+  const { canCreateEvent } = usePermissions(timeline.member_permission)
+  const { createEvent } = useEvents(timeline.id)
 
   const handleSubmit = async (data: EventCreatePayload) => {
     const event = await createEvent(data)
-    navigate(`/timelines/${timelineId}/events/${event.id}`)
+    navigate(`/timelines/${timeline.id}/events/${event.id}`)
+  }
+
+  if (!canCreateEvent) {
+    return <Navigate to={`/timelines/${timeline.id}`} replace />
   }
 
   return (

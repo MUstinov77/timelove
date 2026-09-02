@@ -7,10 +7,11 @@ const PERMISSION_RANK: Record<MemberPermissionType, number> = {
   [MemberPermission.Admin]: 3,
 }
 
-export function usePermissions(userPermission: MemberPermissionType = MemberPermission.Admin) {
+export function usePermissions(userPermission?: MemberPermissionType) {
   return useMemo(() => {
-    const has = (required: MemberPermissionType) =>
-      PERMISSION_RANK[userPermission] >= PERMISSION_RANK[required]
+    // Безопасный дефолт: пока роль неизвестна — показываем минимум (только просмотр).
+    const rank = PERMISSION_RANK[userPermission ?? MemberPermission.Member] ?? 0
+    const has = (required: MemberPermissionType) => rank >= PERMISSION_RANK[required]
 
     return {
       canView: has(MemberPermission.Member),

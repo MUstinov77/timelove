@@ -1,4 +1,4 @@
-import { apiClient } from '@/api/client'
+import { apiClient, listOrEmpty } from '@/api/client'
 import { endpoints } from '@/api/endpoints'
 import type { MessageResponse } from '@/types/api'
 import type { InviteMemberPayload } from '@/types/member'
@@ -6,7 +6,7 @@ import type { Timeline, TimelineCreatePayload } from '@/types/timeline'
 
 export const timelineService = {
   getAll(): Promise<Timeline[]> {
-    return apiClient.get(endpoints.timeline.list).then((r) => r.data)
+    return listOrEmpty(apiClient.get(endpoints.timeline.list).then((r) => r.data))
   },
 
   getById(timelineId: number): Promise<Timeline> {
@@ -21,8 +21,8 @@ export const timelineService = {
     return apiClient.patch(endpoints.timeline.detail(timelineId), payload).then((r) => r.data)
   },
 
-  delete(timelineId: number): Promise<Timeline> {
-    return apiClient.delete(endpoints.timeline.detail(timelineId)).then((r) => r.data)
+  delete(timelineId: number): Promise<void> {
+    return apiClient.delete(endpoints.timeline.detail(timelineId)).then(() => undefined)
   },
 
   inviteMember(timelineId: number, payload: InviteMemberPayload): Promise<MessageResponse> {

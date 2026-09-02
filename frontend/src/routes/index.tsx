@@ -11,6 +11,7 @@ import { TimelineDetailPage } from '@/pages/timelines/TimelineDetailPage'
 import { TimelineListPage } from '@/pages/timelines/TimelineListPage'
 import { GuestRoute } from '@/routes/GuestRoute'
 import { ProtectedRoute } from '@/routes/ProtectedRoute'
+import { TimelineLayout } from '@/routes/TimelineLayout'
 
 export const router = createBrowserRouter([
   {
@@ -28,10 +29,16 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <TimelineListPage /> },
           { path: 'timelines/new', element: <TimelineCreatePage /> },
-          { path: 'timelines/:timelineId', element: <TimelineDetailPage /> },
-          { path: 'timelines/:timelineId/events/new', element: <EventCreatePage /> },
-          { path: 'timelines/:timelineId/events/:eventId', element: <EventDetailPage /> },
-          { path: 'timelines/:timelineId/events/:eventId/edit', element: <EventEditPage /> },
+          {
+            path: 'timelines/:timelineId',
+            element: <TimelineLayout />,
+            children: [
+              { index: true, element: <TimelineDetailPage /> },
+              { path: 'events/new', element: <EventCreatePage /> },
+              { path: 'events/:eventId', element: <EventDetailPage /> },
+              { path: 'events/:eventId/edit', element: <EventEditPage /> },
+            ],
+          },
         ],
       },
     ],

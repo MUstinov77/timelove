@@ -15,5 +15,7 @@ export const endpoints = {
       `/timeline/${timelineId}/event/${eventId}/attachment/`,
     attachment: (timelineId: number, eventId: number, attachmentId: number) =>
       `/timeline/${timelineId}/event/${eventId}/attachment/${attachmentId}`,
+    attachmentFile: (timelineId: number, eventId: number, attachmentId: number) =>
+      `/timeline/${timelineId}/event/${eventId}/attachment/${attachmentId}/file`,
   },
 } as const
