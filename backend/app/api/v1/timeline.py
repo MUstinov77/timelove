@@ -103,12 +103,18 @@ async def update_timeline(
     timeline_id: int,
     update_data: TimelineCreateUpdateSchema,
     timeline_service: TimelineService = Depends(get_timeline_service),
-    _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
+    member_permission: MemberPermission = Depends(
+        check_permission_dependency(MemberPermission.MODERATOR, return_permission=True)
+    ),
 ):
     timeline = await timeline_service.update_instance(update_data.model_dump(), timeline_id)
     if not timeline:
         raise NotFoundException
-    return timeline
+    return TimelineResponseSchema(
+        id=timeline.id,
+        title=timeline.title,
+        member_permission=member_permission,
+    )
 
 
 @router.delete("/{timeline_id}")
