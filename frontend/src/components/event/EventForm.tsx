@@ -9,7 +9,7 @@ import type { EventCreatePayload } from '@/types/event'
 const schema = z.object({
   title: z.string().min(1, 'Введите название'),
   event_date: z.string().min(1, 'Укажите дату'),
-  description: z.string().min(1, 'Введите описание'),
+  description: z.string()
 })
 
 interface EventFormProps {
@@ -50,7 +50,6 @@ export function EventForm({
         label="Описание"
         rows={5}
         {...register('description')}
-        error={errors.description?.message}
         placeholder="Расскажите о событии..."
       />
       <Button type="submit" disabled={isSubmitting}>
