@@ -8,7 +8,8 @@ from backend.app.service.member import MemberService, get_member_service
 
 
 def check_permission_dependency(
-        required_permission: MemberPermission
+        required_permission: MemberPermission,
+        return_permission: bool = False,
 ):
     async def dependency(
             timeline_id: int,
@@ -19,7 +20,10 @@ def check_permission_dependency(
         membership = await member_service.retrieve_membership(timeline_id, user_id)
         if not membership:
             raise PermissionException
-        return match_user_permission(membership.member_permission, required_permission)
+        match_user_permission(membership.member_permission, required_permission)
+        if return_permission:
+            return membership.member_permission
+        return True
 
     return dependency
 
