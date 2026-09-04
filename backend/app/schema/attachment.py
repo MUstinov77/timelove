@@ -7,7 +7,7 @@ from backend.app.core.enum.attachment import AttachmentType
 
 
 class AttachmentCreateSchema(BaseModel):
-    caption: str | None
+    caption: str | None = None
 
     @classmethod
     def as_form(
