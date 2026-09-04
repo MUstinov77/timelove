@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from backend.app.api.v1.event import router as event_router
 from backend.app.core.auth.request_validator import authenticate_user
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.permission import check_permission_dependency
-from backend.app.model.timeline import Timeline
 from backend.app.schema.member import InviteUserToTimelineSchema
 from backend.app.schema.timeline import TimelineCreateUpdateSchema, TimelineResponseSchema
 from backend.app.service.member import MemberService, get_member_service
@@ -40,6 +39,7 @@ async def get_my_timelines(
 @router.post(
     "/",
     response_model=TimelineResponseSchema,
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_timeline(
     create_data: TimelineCreateUpdateSchema,
@@ -58,7 +58,11 @@ async def create_timeline(
     ).model_dump()
     member_create_data["timeline_id"] = timeline.id
     await member_service.create(member_create_data)
-    return timeline
+    return TimelineResponseSchema(
+        id=timeline.id,
+        title=timeline.title,
+        member_permission=MemberPermission.ADMIN,
+    )
 
 # add some logic to acceptable invite(create invite instance)
 @router.post(
@@ -93,7 +97,7 @@ async def get_timeline(
 
 @router.patch(
     "/{timeline_id}",
-    response_model=TimelineResponseSchema
+    response_model=TimelineResponseSchema,
 )
 async def update_timeline(
     timeline_id: int,
