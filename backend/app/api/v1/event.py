@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response, status
 
 from backend.app.api.v1.attachment import router as attachment_router
 from backend.app.core.enum.permission import MemberPermission
@@ -92,5 +92,5 @@ async def delete_event(
     event = await event_service.retrieve_event(timeline_id, event_id)
     if not event:
         raise NotFoundException
-    event = await event_service.delete(event_id)
-    return event
+    await event_service.delete(event.event_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
