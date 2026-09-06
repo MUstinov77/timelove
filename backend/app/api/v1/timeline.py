@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Response
 
 from backend.app.api.v1.event import router as event_router
 from backend.app.core.auth.request_validator import authenticate_user
@@ -117,7 +117,10 @@ async def update_timeline(
     )
 
 
-@router.delete("/{timeline_id}")
+@router.delete(
+    "/{timeline_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 async def delete_timeline(
     timeline_id: int,
     timeline_service: TimelineService = Depends(get_timeline_service),
@@ -126,4 +129,4 @@ async def delete_timeline(
     timeline = await timeline_service.delete(timeline_id)
     if not timeline:
         raise NotFoundException
-    return timeline
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
