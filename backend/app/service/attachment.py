@@ -4,7 +4,7 @@ import uuid
 from mimetypes import guess_extension, guess_type
 
 from fastapi import Depends, HTTPException
-from sqlalchemy import select, update, delete
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.core.configuration import settings
