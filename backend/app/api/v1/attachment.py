@@ -84,7 +84,7 @@ async def update_attachment(
         timeline_id,
         event_id,
         attachment_id,
-        update_data.model_dump()
+        update_data.model_dump(exclude_unset=True)
     )
     if not attachment:
         raise NotFoundException
