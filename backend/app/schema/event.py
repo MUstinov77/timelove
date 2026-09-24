@@ -3,10 +3,10 @@ from datetime import date
 from pydantic import BaseModel
 
 
-class EventCreateUpdateSchema(BaseModel):
+class EventCreateSchema(BaseModel):
     title: str
     event_date: date
-    description: str
+    description: str | None = None
 
 class EventUpdateSchema(BaseModel):
     title: str | None = None
