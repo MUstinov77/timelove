@@ -19,5 +19,5 @@ class EventResponseSchema(BaseModel):
     id: int
     title: str
     event_date: date
-    description: str
+    description: str | None = None
     # files: list[bytes]
