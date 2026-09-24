@@ -4,7 +4,7 @@ from backend.app.api.v1.attachment import router as attachment_router
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.permission import check_permission_dependency
-from backend.app.schema.event import EventCreateUpdateSchema, EventResponseSchema
+from backend.app.schema.event import EventCreateSchema, EventResponseSchema, EventUpdateSchema
 from backend.app.service.event import EventService, get_event_service
 
 router = APIRouter(
@@ -36,7 +36,7 @@ async def get_events(
 )
 async def create_event(
         timeline_id: int,
-        create_data: EventCreateUpdateSchema,
+        create_data: EventCreateSchema,
         event_service: EventService = Depends(get_event_service),
         _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR)),
 ):
@@ -71,7 +71,7 @@ async def get_event(
 async def update_event(
         timeline_id: int,
         event_id: int,
-        update_data: EventCreateUpdateSchema,
+        update_data: EventUpdateSchema,
         event_service: EventService = Depends(get_event_service),
         _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR)),
 ):
