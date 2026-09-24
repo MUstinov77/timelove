@@ -124,5 +124,5 @@ async def get_attachment_file(
         attachment_id,
     )
     if not attachment:
-        raise HTTPException(status_code=401, detail="Attachment not found")
+        raise HTTPException(status_code=404, detail="Attachment not found")
     return FileResponse(attachment.storage_key)
