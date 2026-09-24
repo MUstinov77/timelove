@@ -8,6 +8,11 @@ class EventCreateUpdateSchema(BaseModel):
     event_date: date
     description: str
 
+class EventUpdateSchema(BaseModel):
+    title: str | None = None
+    event_date: date | None = None
+    description: str | None = None
+
 
 
 class EventResponseSchema(BaseModel):
