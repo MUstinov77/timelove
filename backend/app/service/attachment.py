@@ -65,9 +65,9 @@ class AttachmentService(BaseService):
         if not deleted:
             return None
 
-        await self.session.commit()
         try:
             os.remove(attachment.storage_key)
+            await self.session.commit()
         except Exception:
             await self.session.rollback()
             raise HTTPException(status_code=400, detail="Attachment deletion failed")
