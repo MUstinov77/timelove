@@ -16,6 +16,10 @@ def check_permission_dependency(
             member_service: MemberService = Depends(get_member_service),
             auth_user: dict = Depends(authenticate_user),
     ):
+        if not isinstance(required_permission, MemberPermission):
+            raise TypeError(
+                f"required_permission must be MemberPermission, got {required_permission!r}"
+            )
         user_id = auth_user.get("user_id")
         membership = await member_service.retrieve_membership(timeline_id, user_id)
         if not membership:
