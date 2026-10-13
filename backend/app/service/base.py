@@ -1,4 +1,4 @@
-from typing import Any, TypeVar
+from typing import Any
 
 from fastapi import HTTPException
 from sqlalchemy import delete, select, update
@@ -7,11 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.model.base import Base
 
-ModelType = TypeVar("ModelType", bound=Base)
 
 class BaseService:
 
-    model: ModelType = None
+    model: type[Base]
 
     def __init__(self, session):
         self.session: AsyncSession = session
