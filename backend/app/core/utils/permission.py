@@ -21,12 +21,12 @@ def check_permission_dependency(
                 f"required_permission must be MemberPermission, got {required_permission!r}"
             )
         user_id = auth_user.get("user_id")
-        membership = await member_service.retrieve_membership(timeline_id, user_id)
-        if not membership:
+        member_permission = await member_service.retrieve_membership(timeline_id, user_id)
+        if not member_permission:
             raise PermissionException
-        match_user_permission(membership.member_permission, required_permission)
+        match_user_permission(member_permission, required_permission)
         if return_permission:
-            return membership.member_permission
+            return member_permission
         return True
 
     return dependency
