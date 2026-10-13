@@ -37,7 +37,7 @@ class MemberService(BaseService):
     #     return result.scalars().first()
 
     async def retrieve_membership(self, timeline_id: int, user_id: int):
-        query = select(self.model).where(
+        query = select(self.model.member_permission).where(
             self.model.timeline_id == timeline_id,
             self.model.member_id == user_id
         )
