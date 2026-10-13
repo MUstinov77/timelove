@@ -100,7 +100,10 @@ class AttachmentService(BaseService):
     ):
         query = (
             select(self.model).
-            join(Event).
+            join(
+                Event,
+                Event.id == self.model.event_id
+            ).
             where(
                 self.model.id == attachment_id,
                 self.model.event_id == event_id,
