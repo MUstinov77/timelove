@@ -82,7 +82,7 @@ class AttachmentService(BaseService):
             select(self.model).
             join(
                 Event,
-                Event.id == event_id,
+                Event.id == self.model.event_id
             ).
             where(
                 Event.timeline_id == timeline_id,
