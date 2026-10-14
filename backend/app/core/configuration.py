@@ -21,6 +21,13 @@ class Settings(BaseSettings):
 
     @property
     def DB_URI(self): # noqa
+        ## try load driver via config file
+        # try:
+        #     import DB_DRIVER
+        # except ImportError:
+        #     import asyncpg
+
+        ## add driver param to db_uri path
         return (
             f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}"
             f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
