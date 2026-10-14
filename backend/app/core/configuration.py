@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     DB_PORT: int
     DB_NAME: str
 
+    TEST_DB_STAT: bool = False
+
     @property
     def DB_URI(self): # noqa
         return (
