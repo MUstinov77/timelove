@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, String, UniqueConstraint
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.app.core.enum.permission import MemberPermission
@@ -25,13 +25,5 @@ class TimelineMembers(Base):
             "users.id",
             ondelete="CASCADE",
         ),
-        primary_key=True,
-    )
-
-    __table_args__ = (
-        UniqueConstraint(
-            "timeline_id",
-            "member_id",
-            name="unique_timeline_member"
-        ),
+        primary_key=True
     )
