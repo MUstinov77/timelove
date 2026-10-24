@@ -36,3 +36,7 @@ async def prepare_attachment_create_data(file: UploadFile):
         }
 
     return attachment_create_data
+
+
+async def read_attachment_chunked():
+    pass
