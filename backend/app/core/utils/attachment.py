@@ -1,14 +1,15 @@
 import uuid
+from anyio import open_file, Path
 from mimetypes import guess_type
 from pathlib import Path
 
 from fastapi import UploadFile
 
-from backend.app.schema.attachment import AttachmentCreateSchema
 from backend.app.core.configuration import get_settings
 
 settings = get_settings()
 
+CHUNK_SIZE = 1024 * 1024 # 1 Mb
 ALLOWED_MIME_TYPES = {
     "image/jpeg": ".jpg",
     "image/png": ".png",
@@ -38,5 +39,12 @@ async def prepare_attachment_create_data(file: UploadFile):
     return attachment_create_data
 
 
-async def read_attachment_chunked():
-    pass
+async def write_attachment_chunked(file: UploadFile, file_path: Path):
+    # async writing file to directory using thread by anyio lib
+    try:
+        async with await open_file(file_path, "wb") as f:
+            while chunk := await file.read(CHUNK_SIZE):
+                await f.write(chunk)
+    except Exception:
+        await Path(file_path).unlink(missing_ok=True)
+
