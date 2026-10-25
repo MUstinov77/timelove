@@ -3,14 +3,16 @@ import os.path
 import uuid
 from mimetypes import guess_extension, guess_type
 
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, UploadFile
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.app.core.utils.attachment import prepare_attachment_create_data
 from backend.app.core.configuration import settings
 from backend.app.core.datastore import postgres_session_provider
 from backend.app.model.attachment import Attachment
 from backend.app.model.event import Event
+from backend.app.schema.attachment import AttachmentCreateSchema
 from backend.app.service.base import BaseService
 
 
@@ -24,32 +26,22 @@ class AttachmentService(BaseService):
 
     model = Attachment
 
-    async def create_attachment(self, file, request_data):
+    async def create_attachment(self, file: UploadFile, request_data):
         try:
-            mime_type, _ = guess_type(file.filename)
-
-            file_id = uuid.uuid4()
-            file_extension = guess_extension(mime_type)
-            media_type = mime_type.split("/")[0]
-            new_file_name = f"{file_id}{file_extension}"
-            storage_key = os.path.join(settings.ATTACHMENTS_DIRECTORY_PATH, new_file_name)
-
-            attachment_create_data = {
-                "media_type": media_type,
-                "mime_type": mime_type,
-                "storage_key": storage_key,
-                "file_size": file.size,
-            }
+            attachment_create_data = await prepare_attachment_create_data(file)
 
             attachment_create_data.update(request_data)
-            attachment = await self.create(attachment_create_data)
+            attachment = Attachment(**attachment_create_data)
+            self.session.add(attachment)
             file_content = await file.read()
             with open(attachment.storage_key, "wb") as f:
                 f.write(file_content)
+            await self.session.commit()
         except Exception:
             await self.session.rollback()
             raise HTTPException(status_code=400, detail="Attachment creation failed")
         return attachment
+
 
     async def delete_attachment(
             self,
