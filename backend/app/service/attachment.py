@@ -1,14 +1,13 @@
-import os
-import os.path
-import uuid
-from mimetypes import guess_extension, guess_type
-
-from fastapi import Depends, HTTPException, UploadFile
+from fastapi import Depends, UploadFile
 from sqlalchemy import select, update
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.core.utils.attachment import prepare_attachment_create_data
-from backend.app.core.configuration import settings
+from backend.app.core.utils.attachment import (
+    get_attachment_path,
+    prepare_attachment_create_data,
+    write_attachment_chunked,
+)
 from backend.app.core.datastore import postgres_session_provider
 from backend.app.model.attachment import Attachment
 from backend.app.model.event import Event
@@ -26,22 +25,19 @@ class AttachmentService(BaseService):
 
     model = Attachment
 
-    async def create_attachment(self, file: UploadFile, request_data):
+    async def create_attachment(self, file: UploadFile, request_data: dict) -> Attachment:
+        attachment_create_data, file_path = prepare_attachment_create_data(file)
+        await write_attachment_chunked(file, file_path)
+
+        attachment = self.model(**request_data, **attachment_create_data)
+        self.session.add(attachment)
         try:
-            attachment_create_data = await prepare_attachment_create_data(file)
-
-            attachment_create_data.update(request_data)
-            attachment = Attachment(**attachment_create_data)
-            self.session.add(attachment)
-            file_content = await file.read()
-            with open(attachment.storage_key, "wb") as f:
-                f.write(file_content)
             await self.session.commit()
-        except Exception:
+        except SQLAlchemyError:
             await self.session.rollback()
-            raise HTTPException(status_code=400, detail="Attachment creation failed")
+            await file_path.unlink(missing_ok=True)
+            raise
         return attachment
-
 
     async def delete_attachment(
             self,
@@ -57,12 +53,9 @@ class AttachmentService(BaseService):
         if not deleted:
             return None
 
-        try:
-            os.remove(attachment.storage_key)
-            await self.session.commit()
-        except Exception:
-            await self.session.rollback()
-            raise HTTPException(status_code=400, detail="Attachment deletion failed")
+        await self.session.commit()
+        # remove file only after commit: a missing file is better than a row without one
+        await get_attachment_path(attachment.storage_key).unlink(missing_ok=True)
         return attachment
 
     async def retrieve_event_attachments(

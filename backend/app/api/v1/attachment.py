@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
+from backend.app.core.utils.attachment import get_attachment_path
 from backend.app.core.utils.permission import check_permission_dependency
 from backend.app.model.event import Event
 from backend.app.schema.attachment import AttachmentCreateSchema, AttachmentResponseSchema
@@ -125,4 +126,7 @@ async def get_attachment_file(
     )
     if not attachment:
         raise HTTPException(status_code=404, detail="Attachment not found")
-    return FileResponse(attachment.storage_key)
+    return FileResponse(
+        get_attachment_path(attachment.storage_key),
+        media_type=attachment.mime_type,
+    )
