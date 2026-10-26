@@ -1,7 +1,7 @@
 from datetime import date
 from typing import TYPE_CHECKING
 
-from sqlalchemy import DATE, ForeignKey, String
+from sqlalchemy import Date, ForeignKey, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.model.attachment import Attachment
@@ -17,7 +17,7 @@ class Event(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String())
     event_date: Mapped[date] = mapped_column(
-        DATE,
+        Date
     )
     location: Mapped[str] = mapped_column(String(), nullable=True)
     description: Mapped[str] = mapped_column(String(), nullable=True)
@@ -33,7 +33,6 @@ class Event(Base):
     attachments: Mapped[list["Attachment"]] = relationship(
         back_populates="event",
         cascade="all, delete-orphan",
-        order_by=Attachment.sort_order,
         lazy="selectin"
     )
 

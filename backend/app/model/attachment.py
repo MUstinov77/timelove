@@ -1,6 +1,7 @@
+from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import BigInteger, ForeignKey, Integer, String, Text
+from sqlalchemy import BigInteger, ForeignKey, Integer, String, Text, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.model.base import Base
@@ -30,7 +31,11 @@ class Attachment(Base):
     duration_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     checksum_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
-    sort_order: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
     caption: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
