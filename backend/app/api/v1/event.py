@@ -76,7 +76,7 @@ async def update_event(
     event = await event_service.retrieve_event(timeline_id, event_id)
     if not event:
         raise NotFoundException
-    event = await event_service.update_instance(update_data.model_dump(), event_id)
+    event = await event_service.update_instance(update_data.model_dump(exclude_unset=True), event_id)
     return event
 
 
