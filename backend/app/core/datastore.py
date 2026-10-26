@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+from redis import Redis
 
 from backend.app.core.configuration import settings
 
@@ -59,3 +60,6 @@ async def postgres_session_provider(
         session: Annotated[AsyncSession, Depends(get_postgres_session)]
 ):
     return session
+
+async def get_redis_client():
+    return Redis.from_url(settings.REDIS_URI)
