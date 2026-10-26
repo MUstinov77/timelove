@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     DB_PORT: int
     DB_NAME: str
 
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6547
+
     TEST_DB_STAT: bool = False
 
     @property
@@ -32,6 +35,10 @@ class Settings(BaseSettings):
             f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}"
             f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         )
+
+    @property
+    def REDIS_URI(self): # noqa
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
 
     model_config = SettingsConfigDict(
         env_file=Path(__file__).parents[2].joinpath(".env")
