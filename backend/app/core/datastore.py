@@ -31,10 +31,10 @@ async def init_db():
         from sqlalchemy import text
         # async with async_session_maker() as session:
         #     await session.execute("CREATE EXTENSION IF NOT EXISTS pg_stat_statements;")
-        conn = async_engine.connect()
-        result = await conn.execute(text("""
-            CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
-        """))
+        async with async_engine.connect() as conn:
+            result = await conn.execute(text("""
+                CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+            """))
 
 async def destroy_db():
     global  async_engine
