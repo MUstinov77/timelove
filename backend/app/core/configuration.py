@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     DB_NAME: str
 
     REDIS_HOST: str = "localhost"
-    REDIS_PORT: int = 6547
+    REDIS_PORT: int = 6379
 
     TEST_DB_STAT: bool = False
 
