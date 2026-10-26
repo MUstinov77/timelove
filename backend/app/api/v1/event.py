@@ -9,8 +9,6 @@ from backend.app.service.event import EventService, get_event_service
 
 router = APIRouter(
     prefix="/event",
-    dependencies=(
-    )
 )
 
 router.include_router(
