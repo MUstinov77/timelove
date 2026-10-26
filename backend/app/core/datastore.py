@@ -62,4 +62,4 @@ async def postgres_session_provider(
     return session
 
 async def get_redis_client():
-    return Redis.from_url(settings.REDIS_URI)
+    return Redis.from_url(settings.REDIS_URI, decode_responses=True)
