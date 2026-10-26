@@ -29,7 +29,6 @@ class AttachmentResponseSchema(BaseModel):
     width: int | None
     height: int | None
     duration_ms: int | None
-    sort_order: int
     caption: str | None
     event_id: int
 
