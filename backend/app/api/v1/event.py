@@ -90,5 +90,5 @@ async def delete_event(
     event = await event_service.retrieve_event(timeline_id, event_id)
     if not event:
         raise NotFoundException
-    await event_service.delete(event.event_id)
+    await event_service.delete(event.id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
