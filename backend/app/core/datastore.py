@@ -7,18 +7,23 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
-from redis.asyncio import Redis
+from redis.asyncio import Redis as AsyncRedis
 
 from backend.app.core.configuration import settings
 
 async_engine: AsyncEngine | None = None
 async_session_maker: async_sessionmaker[AsyncSession] | None = None
+async_redis_engine: AsyncRedis | None = None
 
 async def init_db():
-    global  async_engine, async_session_maker
+    global  async_engine, async_session_maker, async_redis_engine
 
     if async_engine:
         print("Database already initialized")
+        return
+
+    if async_redis_engine:
+        print("Redis already initialized")
         return
 
     async_engine = create_async_engine(settings.DB_URI, echo=True)
@@ -27,6 +32,8 @@ async def init_db():
         async_engine,
         expire_on_commit=False,
     )
+
+    async_redis_engine = AsyncRedis.from_url(settings.REDIS_URI, decode_responses=True)
 
     if settings.TEST_DB_STAT:
         from sqlalchemy import text
@@ -38,11 +45,15 @@ async def init_db():
             """))
 
 async def destroy_db():
-    global  async_engine
+    global  async_engine, async_redis_engine
 
     if async_engine:
         await async_engine.dispose()
         async_engine = None
+
+    if async_redis_engine:
+        await async_redis_engine.aclose()
+        async_redis_engine = None
 
 async def get_postgres_session():
     if not async_session_maker:
@@ -60,6 +71,3 @@ async def postgres_session_provider(
         session: Annotated[AsyncSession, Depends(get_postgres_session)]
 ):
     return session
-
-async def get_redis_client():
-    return Redis.from_url(settings.REDIS_URI, decode_responses=True)
