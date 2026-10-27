@@ -23,6 +23,7 @@ async def init_db():
         return
 
     if async_redis_engine:
+        await async_redis_engine.ping()
         print("Redis already initialized")
         return
 
