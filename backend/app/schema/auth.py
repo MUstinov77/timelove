@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import BaseModel, EmailStr, SecretStr, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, SecretStr
 
 Password = Annotated[
     SecretStr,
