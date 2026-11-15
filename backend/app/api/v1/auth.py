@@ -25,8 +25,8 @@ async def signup(
         create_data: UserSignupSchema,
         user_service: UserService = Depends(get_user_service)
 ):
-    user_data = create_data.model_dump()
-    hashed_password = await get_hashed_password(user_data.pop("password"))
+    user_data = create_data.model_dump(exclude={"password"})
+    hashed_password = await get_hashed_password(create_data.password.get_secret_value())
     user_data["hashed_password"] = hashed_password
     await user_service.create(user_data)
     return {"message": "User created"}
