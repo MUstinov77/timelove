@@ -35,6 +35,6 @@ class UserSignupSchema(BaseModel):
 
 class UserLoginSchema(BaseModel):
     email: EmailStr
-    password: Password
+    password: SecretStr
 
     model_config = ConfigDict(extra="ignore")
