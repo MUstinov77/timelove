@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, SecretStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, SecretStr, field_validator
 
 Password = Annotated[
     SecretStr,
@@ -22,6 +22,13 @@ class UserSignupSchema(BaseModel):
 
     first_name: str | None = None
     last_name: str | None = None
+
+    @field_validator("password")
+    @classmethod
+    def reject_whitespace_only_password(cls, value: SecretStr):
+        if not value.get_secret_value().strip():
+            raise ValueError("Password cant contain only whitespaces")
+        return value
 
     model_config = ConfigDict(extra="ignore")
 
