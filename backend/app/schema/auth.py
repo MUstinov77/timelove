@@ -1,4 +1,14 @@
-from pydantic import BaseModel, EmailStr
+from typing import Annotated
+
+from pydantic import BaseModel, EmailStr, SecretStr, Field, ConfigDict
+
+Password = Annotated[
+    SecretStr,
+    Field(
+        min_length=10,
+        max_length=20
+    )
+]
 
 
 class Token(BaseModel):
@@ -8,18 +18,16 @@ class Token(BaseModel):
 
 class UserSignupSchema(BaseModel):
     email: EmailStr
-    password: str
+    password: Password
 
     first_name: str | None = None
     last_name: str | None = None
 
-    class Config:
-        extra = "ignore"
+    model_config = ConfigDict(extra="ignore")
 
 
 class UserLoginSchema(BaseModel):
     email: EmailStr
-    password: str
+    password: Password
 
-    class Config:
-        extra = "ignore"
+    model_config = ConfigDict(extra="ignore")
