@@ -34,7 +34,7 @@ async def signup(
 
 @router.post(
     "/login",
-    response_model=Token | None
+    response_model=Token
 )
 async def login(
         login_data: OAuth2PasswordRequestForm = Depends(),
