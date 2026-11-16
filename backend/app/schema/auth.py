@@ -34,7 +34,10 @@ class UserSignupSchema(BaseModel):
 
 
 class UserLoginSchema(BaseModel):
-    email: EmailStr
+    email: EmailStr = Field(alias="username")
     password: SecretStr
 
-    model_config = ConfigDict(extra="ignore")
+    model_config = ConfigDict(
+        extra="ignore",
+        validate_by_name=True
+    )
