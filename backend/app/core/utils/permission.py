@@ -4,7 +4,7 @@ from fastapi.exceptions import HTTPException
 from backend.app.core.auth.request_validator import authenticate_user
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import PermissionException
-from backend.app.service.member import MemberService, get_member_service
+from backend.app.dependencies.service import MemberServiceDep
 
 
 def check_permission_dependency(
@@ -13,7 +13,7 @@ def check_permission_dependency(
 ):
     async def dependency(
             timeline_id: int,
-            member_service: MemberService = Depends(get_member_service),
+            member_service: MemberServiceDep,
             auth_user: dict = Depends(authenticate_user),
     ):
         if not isinstance(required_permission, MemberPermission):

@@ -1,13 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, status
+from fastapi import APIRouter, Form, status
 
 from backend.app.core.auth.jwt import JWTService
 from backend.app.core.exception.auth import LoginCredentialException
 from backend.app.core.utils.encrypt import get_hashed_password, verify_password
+from backend.app.dependencies.service import UserServiceDep
 from backend.app.model.user import User
 from backend.app.schema.auth import Token, UserLoginSchema, UserSignupSchema
-from backend.app.service.user import UserService, get_user_service
 
 BASE_PREFIX = "/auth"
 
@@ -23,7 +23,7 @@ router = APIRouter(
 )
 async def signup(
         create_data: UserSignupSchema,
-        user_service: UserService = Depends(get_user_service)
+        user_service: UserServiceDep
 ):
     user_data = create_data.model_dump(exclude={"password"})
     hashed_password = await get_hashed_password(create_data.password.get_secret_value())
@@ -38,7 +38,7 @@ async def signup(
 )
 async def login(
         login_data: Annotated[UserLoginSchema, Form()],
-        user_service: UserService = Depends(get_user_service)
+        user_service: UserServiceDep
 ):
     user = await user_service.retrieve_one(User.email, login_data.email)
     if not user:

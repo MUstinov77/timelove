@@ -1,19 +1,8 @@
-from typing import Any
-
-from fastapi import Depends
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.core.datastore import postgres_session_provider
 from backend.app.model.timeline_members import TimelineMembers
 
 from .base import BaseService
-
-
-async def get_member_service(
-    session: AsyncSession = Depends(postgres_session_provider)
-):
-    return MemberService(session)
 
 
 class MemberService(BaseService):

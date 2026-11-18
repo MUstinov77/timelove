@@ -4,8 +4,8 @@ from backend.app.api.v1.attachment import router as attachment_router
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.permission import check_permission_dependency
+from backend.app.dependencies.service import EventServiceDep
 from backend.app.schema.event import EventCreateSchema, EventResponseSchema, EventUpdateSchema
-from backend.app.service.event import EventService, get_event_service
 
 router = APIRouter(
     prefix="/event",
@@ -22,7 +22,7 @@ router.include_router(
 )
 async def get_events(
     timeline_id: int,
-    event_service: EventService = Depends(get_event_service),
+    event_service: EventServiceDep,
     _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
     events = await event_service.retrieve_timeline_events(timeline_id)
@@ -35,7 +35,7 @@ async def get_events(
 async def create_event(
         timeline_id: int,
         create_data: EventCreateSchema,
-        event_service: EventService = Depends(get_event_service),
+        event_service: EventServiceDep,
         _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR)),
 ):
     event_data = create_data.model_dump()
@@ -53,7 +53,7 @@ async def create_event(
 async def get_event(
         timeline_id: int,
         event_id: int,
-        event_service: EventService = Depends(get_event_service),
+        event_service: EventServiceDep,
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
     event = await event_service.retrieve_event(timeline_id, event_id)
@@ -70,7 +70,7 @@ async def update_event(
         timeline_id: int,
         event_id: int,
         update_data: EventUpdateSchema,
-        event_service: EventService = Depends(get_event_service),
+        event_service: EventServiceDep,
         _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR)),
 ):
     event = await event_service.retrieve_event(timeline_id, event_id)
@@ -84,7 +84,7 @@ async def update_event(
 async def delete_event(
         timeline_id: int,
         event_id: int,
-        event_service: EventService = Depends(get_event_service),
+        event_service: EventServiceDep,
         _admin_permission = Depends(check_permission_dependency(MemberPermission.ADMIN)),
 ):
     event = await event_service.retrieve_event(timeline_id, event_id)

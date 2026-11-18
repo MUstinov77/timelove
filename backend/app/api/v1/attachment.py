@@ -7,9 +7,9 @@ from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.attachment import get_attachment_path
 from backend.app.core.utils.permission import check_permission_dependency
+from backend.app.dependencies.service import AttachmentServiceDep
 from backend.app.model.event import Event
 from backend.app.schema.attachment import AttachmentCreateSchema, AttachmentResponseSchema
-from backend.app.service.attachment import AttachmentService, get_attachment_service
 from backend.app.shortcuts.event import retrieve_event
 
 router = APIRouter(
@@ -23,7 +23,7 @@ router = APIRouter(
 async def get_attachments(
         timeline_id: int,
         event_id: int,
-        attachment_service: AttachmentService = Depends(get_attachment_service),
+        attachment_service: AttachmentServiceDep,
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
 ):
     attachments = await attachment_service.retrieve_event_attachments(timeline_id, event_id)
@@ -34,10 +34,10 @@ async def get_attachments(
     response_model=AttachmentResponseSchema,
 )
 async def create_attachment(
+        attachment_service: AttachmentServiceDep,
         data: AttachmentCreateSchema = Depends(AttachmentCreateSchema.as_form),
         file: UploadFile = File(...),
         event: Event = Depends(retrieve_event(MemberPermission.MODERATOR)),
-        attachment_service: AttachmentService = Depends(get_attachment_service),
 ):
 
     create_data = data.model_dump()
@@ -58,7 +58,7 @@ async def get_attachment(
         timeline_id: int,
         event_id: int,
         attachment_id: int,
-        attachment_service: AttachmentService = Depends(get_attachment_service),
+        attachment_service: AttachmentServiceDep,
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
     attachment = await attachment_service.retrieve_attachment(timeline_id, event_id, attachment_id)
@@ -76,7 +76,7 @@ async def update_attachment(
         event_id: int,
         attachment_id: int,
         update_data: AttachmentCreateSchema,
-        attachment_service: AttachmentService = Depends(get_attachment_service),
+        attachment_service: AttachmentServiceDep,
         _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
 ):
     attachment = await attachment_service.update_attachment(
@@ -98,7 +98,7 @@ async def delete_attachment(
         timeline_id: int,
         event_id: int,
         attachment_id: int,
-        attachment_service: AttachmentService = Depends(get_attachment_service),
+        attachment_service: AttachmentServiceDep,
         _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
 ):
     attachment = await attachment_service.delete_attachment(timeline_id, event_id, attachment_id)
@@ -114,7 +114,7 @@ async def get_attachment_file(
         timeline_id: int,
         event_id: int,
         attachment_id: int,
-        attachment_service: AttachmentService = Depends(get_attachment_service),
+        attachment_service: AttachmentServiceDep,
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
     attachment = await attachment_service.retrieve_attachment(

@@ -5,10 +5,9 @@ from backend.app.core.auth.request_validator import authenticate_user
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.permission import check_permission_dependency
+from backend.app.dependencies.service import MemberServiceDep, TimelineServiceDep
 from backend.app.schema.member import InviteUserToTimelineSchema
 from backend.app.schema.timeline import TimelineCreateUpdateSchema, TimelineResponseSchema
-from backend.app.service.member import MemberService, get_member_service
-from backend.app.service.timeline import TimelineService, get_timeline_service
 
 router = APIRouter(
     prefix="/timeline",
@@ -28,8 +27,8 @@ router.include_router(
     response_model=list[TimelineResponseSchema]
 )
 async def get_my_timelines(
+    timeline_service: TimelineServiceDep,
     auth_user = Depends(authenticate_user),
-    timeline_service: TimelineService = Depends(get_timeline_service),
 ):
     user_id = auth_user.get("user_id")
     timelines = await timeline_service.get_timelines_by_user_id(user_id)
@@ -43,9 +42,9 @@ async def get_my_timelines(
 )
 async def create_timeline(
     create_data: TimelineCreateUpdateSchema,
+    timeline_service: TimelineServiceDep,
+    member_service: MemberServiceDep,
     auth_user = Depends(authenticate_user),
-    timeline_service: TimelineService = Depends(get_timeline_service),
-    member_service: MemberService = Depends(get_member_service),
 ):
     user_id = auth_user.get("user_id")
     timeline_data = create_data.model_dump()
@@ -71,7 +70,7 @@ async def create_timeline(
 async def add_user_to_timeline(
         timeline_id: int,
         invite_data: InviteUserToTimelineSchema,
-        member_service: MemberService = Depends(get_member_service),
+        member_service: MemberServiceDep,
         _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
 ):
     membership_data = invite_data.model_dump()
@@ -86,7 +85,7 @@ async def add_user_to_timeline(
 )
 async def get_timeline(
         timeline_id: int,
-        timeline_service: TimelineService = Depends(get_timeline_service),
+        timeline_service: TimelineServiceDep,
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
     timeline = await timeline_service.retrieve_timeline(timeline_id)
@@ -102,7 +101,7 @@ async def get_timeline(
 async def update_timeline(
     timeline_id: int,
     update_data: TimelineCreateUpdateSchema,
-    timeline_service: TimelineService = Depends(get_timeline_service),
+    timeline_service: TimelineServiceDep,
     member_permission: MemberPermission = Depends(
         check_permission_dependency(MemberPermission.MODERATOR, return_permission=True)
     ),
@@ -123,7 +122,7 @@ async def update_timeline(
 )
 async def delete_timeline(
     timeline_id: int,
-    timeline_service: TimelineService = Depends(get_timeline_service),
+    timeline_service: TimelineServiceDep,
     _admin_permission = Depends(check_permission_dependency(MemberPermission.ADMIN))
 ):
     timeline = await timeline_service.delete(timeline_id)
