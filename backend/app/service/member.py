@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy import select
 
 from backend.app.model.timeline_members import TimelineMembers
@@ -25,7 +27,7 @@ class MemberService(BaseService):
     #     result = await self.session.execute(query)
     #     return result.scalars().first()
 
-    async def retrieve_membership(self, timeline_id: int, user_id: int):
+    async def retrieve_membership(self, timeline_id: int, user_id: UUID):
         query = select(self.model.member_permission).where(
             self.model.timeline_id == timeline_id,
             self.model.member_id == user_id

@@ -1,5 +1,7 @@
-from sqlalchemy import ForeignKey, String
+from uuid import UUID
+
 from sqlalchemy import Enum as SAEnum
+from sqlalchemy import ForeignKey, Uuid
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.app.core.enum.permission import MemberPermission
@@ -25,7 +27,8 @@ class TimelineMembers(Base):
         ),
         default=MemberPermission.MEMBER,
     )
-    member_id: Mapped[int] = mapped_column(
+    member_id: Mapped[UUID] = mapped_column(
+        Uuid(),
         ForeignKey(
             "users.id",
             ondelete="CASCADE",

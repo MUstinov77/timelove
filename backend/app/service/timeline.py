@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy import select
 
 from backend.app.model.timeline import Timeline
@@ -10,7 +12,7 @@ class TimelineService(BaseService):
 
     model = Timeline
 
-    async def get_timelines_by_user_id(self, user_id: int):
+    async def get_timelines_by_user_id(self, user_id: UUID):
         query = (
             select(self.model.id, self.model.title, TimelineMembers.member_permission).
             join(TimelineMembers).
