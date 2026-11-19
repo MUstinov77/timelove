@@ -1,11 +1,9 @@
-from uuid import UUID
-
-from fastapi import Depends, status
+from fastapi import status
 from fastapi.exceptions import HTTPException
 
-from backend.app.core.auth.request_validator import authenticate_user
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import PermissionException
+from backend.app.dependencies.auth import AuthUserDep
 from backend.app.dependencies.service import MemberServiceDep
 
 
@@ -16,7 +14,7 @@ def check_permission_dependency(
     async def dependency(
             timeline_id: int,
             member_service: MemberServiceDep,
-            user_id: UUID = Depends(authenticate_user),
+            user_id: AuthUserDep,
     ):
         if not isinstance(required_permission, MemberPermission):
             raise TypeError(
