@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str
     JWT_ISSUER: str
     TOKEN_EXPIRE_HOURS: int
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     TITLE: str = "Timelove"
     DB_USER: str
     DB_PASSWORD: str

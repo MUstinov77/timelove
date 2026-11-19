@@ -45,8 +45,5 @@ async def login(
         raise LoginCredentialException
     if not await verify_password(login_data.password.get_secret_value(), user.hashed_password):
         raise LoginCredentialException
-    token = JWTService().create_and_encode_token({
-        "user_id": user.id,
-        "username": user.email
-    })
+    token = JWTService().create_and_encode_access_token(user_id=user.id)
     return {"access_token": token}

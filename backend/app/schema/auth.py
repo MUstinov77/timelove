@@ -1,4 +1,5 @@
-from typing import Annotated
+from typing import Annotated, Literal
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, SecretStr, field_validator
 
@@ -41,3 +42,13 @@ class UserLoginSchema(BaseModel):
         extra="ignore",
         validate_by_name=True
     )
+
+class AccessTokenPayload(BaseModel):
+
+    iss: str
+    sub: UUID
+    jti: UUID
+    iat: int = Field(strict=True)
+    exp: int = Field(strict=True)
+    token_type: Literal["access"]
+
