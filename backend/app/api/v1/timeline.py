@@ -4,6 +4,7 @@ from backend.app.api.v1.event import router as event_router
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.permission import check_permission_dependency
+from backend.app.dependencies.permission import MemberPermissionDep, ModeratorPermissionDep, AdminPermissionDep
 from backend.app.dependencies.auth import AuthUserDep, authenticate_user
 from backend.app.dependencies.service import MemberServiceDep, TimelineServiceDep
 from backend.app.schema.member import InviteUserToTimelineSchema
@@ -72,7 +73,7 @@ async def add_user_to_timeline(
         timeline_id: int,
         invite_data: InviteUserToTimelineSchema,
         member_service: MemberServiceDep,
-        _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR))
+        _moder_permission: ModeratorPermissionDep
 ):
     membership_data = invite_data.model_dump()
     membership_data["timeline_id"] = timeline_id
@@ -88,7 +89,7 @@ async def get_timeline(
         timeline_id: int,
         timeline_service: TimelineServiceDep,
         user_id: AuthUserDep,
-        _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
+        _member_permission: MemberPermissionDep
 ):
     timeline = await timeline_service.retrieve_timeline(timeline_id, user_id)
     if not timeline:
@@ -104,9 +105,7 @@ async def update_timeline(
     timeline_id: int,
     update_data: TimelineCreateUpdateSchema,
     timeline_service: TimelineServiceDep,
-    member_permission: MemberPermission = Depends(
-        check_permission_dependency(MemberPermission.MODERATOR, return_permission=True)
-    ),
+    member_permission: MemberPermissionDep
 ):
     timeline = await timeline_service.update_instance(update_data.model_dump(), timeline_id)
     if not timeline:
@@ -125,7 +124,7 @@ async def update_timeline(
 async def delete_timeline(
     timeline_id: int,
     timeline_service: TimelineServiceDep,
-    _admin_permission = Depends(check_permission_dependency(MemberPermission.ADMIN))
+    _admin_permission: AdminPermissionDep
 ):
     timeline = await timeline_service.delete(timeline_id)
     if not timeline:

@@ -5,6 +5,7 @@ from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.permission import check_permission_dependency
 from backend.app.dependencies.service import EventServiceDep
+from backend.app.dependencies.permission import MemberPermissionDep, ModeratorPermissionDep, AdminPermissionDep
 from backend.app.schema.event import EventCreateSchema, EventResponseSchema, EventUpdateSchema
 
 router = APIRouter(
@@ -23,7 +24,7 @@ router.include_router(
 async def get_events(
     timeline_id: int,
     event_service: EventServiceDep,
-    _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
+    _member_permission: MemberPermissionDep
 ):
     events = await event_service.retrieve_timeline_events(timeline_id)
     return events
@@ -36,7 +37,7 @@ async def create_event(
         timeline_id: int,
         create_data: EventCreateSchema,
         event_service: EventServiceDep,
-        _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR)),
+        _moder_permission: ModeratorPermissionDep
 ):
     event_data = create_data.model_dump()
     event_data["timeline_id"] = timeline_id
@@ -54,7 +55,7 @@ async def get_event(
         timeline_id: int,
         event_id: int,
         event_service: EventServiceDep,
-        _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER)),
+        _member_permission: MemberPermissionDep
 ):
     event = await event_service.retrieve_event(timeline_id, event_id)
     if not event:
@@ -71,7 +72,7 @@ async def update_event(
         event_id: int,
         update_data: EventUpdateSchema,
         event_service: EventServiceDep,
-        _moder_permission = Depends(check_permission_dependency(MemberPermission.MODERATOR)),
+        _moder_permission: ModeratorPermissionDep
 ):
     event = await event_service.retrieve_event(timeline_id, event_id)
     if not event:
@@ -85,7 +86,7 @@ async def delete_event(
         timeline_id: int,
         event_id: int,
         event_service: EventServiceDep,
-        _admin_permission = Depends(check_permission_dependency(MemberPermission.ADMIN)),
+        _admin_permission: AdminPermissionDep
 ):
     event = await event_service.retrieve_event(timeline_id, event_id)
     if not event:
