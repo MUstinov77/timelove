@@ -28,9 +28,8 @@ router.include_router(
 )
 async def get_my_timelines(
     timeline_service: TimelineServiceDep,
-    auth_user = Depends(authenticate_user),
+    user_id = Depends(authenticate_user),
 ):
-    user_id = auth_user.get("user_id")
     timelines = await timeline_service.get_timelines_by_user_id(user_id)
     return timelines
 
@@ -44,9 +43,8 @@ async def create_timeline(
     create_data: TimelineCreateUpdateSchema,
     timeline_service: TimelineServiceDep,
     member_service: MemberServiceDep,
-    auth_user = Depends(authenticate_user),
+    user_id = Depends(authenticate_user),
 ):
-    user_id = auth_user.get("user_id")
     timeline_data = create_data.model_dump()
     timeline = await timeline_service.create(timeline_data)
     if not timeline:
