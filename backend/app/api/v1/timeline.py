@@ -3,9 +3,12 @@ from fastapi import APIRouter, Depends, Response, status
 from backend.app.api.v1.event import router as event_router
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
-from backend.app.core.utils.permission import check_permission_dependency
-from backend.app.dependencies.permission import MemberPermissionDep, ModeratorPermissionDep, AdminPermissionDep
 from backend.app.dependencies.auth import AuthUserDep, authenticate_user
+from backend.app.dependencies.permission import (
+    AdminPermissionDep,
+    MemberPermissionDep,
+    ModeratorPermissionDep,
+)
 from backend.app.dependencies.service import MemberServiceDep, TimelineServiceDep
 from backend.app.schema.member import InviteUserToTimelineSchema
 from backend.app.schema.timeline import (

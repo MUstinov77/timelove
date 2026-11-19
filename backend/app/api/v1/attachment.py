@@ -6,11 +6,16 @@ from fastapi.responses import FileResponse
 from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
 from backend.app.core.utils.attachment import get_attachment_path
-from backend.app.core.utils.permission import check_permission_dependency
-from backend.app.dependencies.permission import MemberPermissionDep, ModeratorPermissionDep
+from backend.app.dependencies.permission import (
+    MemberPermissionDep,
+    ModeratorPermissionDep,
+)
 from backend.app.dependencies.service import AttachmentServiceDep
 from backend.app.model.event import Event
-from backend.app.schema.attachment import AttachmentCreateSchema, AttachmentResponseSchema
+from backend.app.schema.attachment import (
+    AttachmentCreateSchema,
+    AttachmentResponseSchema,
+)
 from backend.app.shortcuts.event import retrieve_event
 
 router = APIRouter(

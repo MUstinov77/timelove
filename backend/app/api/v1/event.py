@@ -1,12 +1,18 @@
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Response, status
 
 from backend.app.api.v1.attachment import router as attachment_router
-from backend.app.core.enum.permission import MemberPermission
 from backend.app.core.exceptions import NotFoundException
-from backend.app.core.utils.permission import check_permission_dependency
+from backend.app.dependencies.permission import (
+    AdminPermissionDep,
+    MemberPermissionDep,
+    ModeratorPermissionDep,
+)
 from backend.app.dependencies.service import EventServiceDep
-from backend.app.dependencies.permission import MemberPermissionDep, ModeratorPermissionDep, AdminPermissionDep
-from backend.app.schema.event import EventCreateSchema, EventResponseSchema, EventUpdateSchema
+from backend.app.schema.event import (
+    EventCreateSchema,
+    EventResponseSchema,
+    EventUpdateSchema,
+)
 
 router = APIRouter(
     prefix="/event",
