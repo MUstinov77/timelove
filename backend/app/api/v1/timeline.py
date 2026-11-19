@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, status, Response
 
 from backend.app.api.v1.event import router as event_router
@@ -84,9 +86,10 @@ async def add_user_to_timeline(
 async def get_timeline(
         timeline_id: int,
         timeline_service: TimelineServiceDep,
+        user_id: UUID = Depends(authenticate_user),
         _member_permission = Depends(check_permission_dependency(MemberPermission.MEMBER))
 ):
-    timeline = await timeline_service.retrieve_timeline(timeline_id)
+    timeline = await timeline_service.retrieve_timeline(timeline_id, user_id)
     if not timeline:
         raise NotFoundException
     return timeline

@@ -33,4 +33,4 @@ class MemberService(BaseService):
             self.model.member_id == user_id
         )
         result = await self.session.execute(query)
-        return result.scalars().first()
+        return result.scalars().one_or_none()
