@@ -1,7 +1,7 @@
 from typing import Annotated, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, SecretStr, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, SecretStr, field_validator, computed_field, AfterValidator
 
 Password = Annotated[
     SecretStr,
@@ -11,6 +11,11 @@ Password = Annotated[
     )
 ]
 
+NormalizedEmail = Annotated[
+    EmailStr,
+    AfterValidator(str.lower)
+]
+
 
 class Token(BaseModel):
     access_token: str
@@ -18,7 +23,7 @@ class Token(BaseModel):
 
 
 class UserSignupSchema(BaseModel):
-    email: EmailStr
+    email: NormalizedEmail
     password: Password
 
     first_name: str | None = None
@@ -35,7 +40,7 @@ class UserSignupSchema(BaseModel):
 
 
 class UserLoginSchema(BaseModel):
-    email: EmailStr = Field(alias="username")
+    email: NormalizedEmail = Field(alias="username")
     password: SecretStr
 
     model_config = ConfigDict(
@@ -51,4 +56,3 @@ class AccessTokenPayload(BaseModel):
     iat: int = Field(strict=True)
     exp: int = Field(strict=True)
     token_type: Literal["access"]
-
