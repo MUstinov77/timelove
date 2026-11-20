@@ -1,6 +1,6 @@
 from sqlalchemy import select
 
-from backend.app.model.event import Event
+from backend.app.model import Event
 
 from .base import BaseService
 

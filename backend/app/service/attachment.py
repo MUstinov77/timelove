@@ -7,8 +7,7 @@ from backend.app.core.utils.attachment import (
     prepare_attachment_create_data,
     write_attachment_chunked,
 )
-from backend.app.model.attachment import Attachment
-from backend.app.model.event import Event
+from backend.app.model import Attachment, Event
 from backend.app.service.base import BaseService
 
 

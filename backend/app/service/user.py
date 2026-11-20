@@ -1,4 +1,4 @@
-from backend.app.model.user import User
+from backend.app.model import User
 
 from .base import BaseService
 

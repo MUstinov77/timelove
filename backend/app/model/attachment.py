@@ -1,13 +1,13 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import BigInteger, ForeignKey, Integer, String, Text, DateTime, func
+from sqlalchemy import BigInteger, DateTime, ForeignKey, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.app.model.base import Base
+from .base import Base
 
 if TYPE_CHECKING:
-    from backend.app.model.event import Event
+    from backend.app.model import Event
 
 
 class Attachment(Base):

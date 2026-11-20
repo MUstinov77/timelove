@@ -2,7 +2,7 @@ from uuid import UUID
 
 from sqlalchemy import select
 
-from backend.app.model.timeline_members import TimelineMembers
+from backend.app.model import TimelineMembers
 
 from .base import BaseService
 

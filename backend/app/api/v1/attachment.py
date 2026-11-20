@@ -12,7 +12,7 @@ from backend.app.dependencies.permission import (
     ModeratorPermissionDep,
 )
 from backend.app.dependencies.service import AttachmentServiceDep
-from backend.app.model.event import Event
+from backend.app.model import Event
 from backend.app.schema.attachment import (
     AttachmentCreateSchema,
     AttachmentResponseSchema,

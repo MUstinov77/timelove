@@ -4,10 +4,10 @@ from uuid import UUID, uuid7
 from sqlalchemy import String, Uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.app.model.base import Base
+from .base import Base
 
 if TYPE_CHECKING:
-    from backend.app.model.timeline import Timeline
+    from backend.app.model import Timeline
 
 
 

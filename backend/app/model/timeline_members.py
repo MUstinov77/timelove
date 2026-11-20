@@ -5,7 +5,8 @@ from sqlalchemy import ForeignKey, Uuid
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.app.core.enum.permission import MemberPermission
-from backend.app.model.base import Base
+
+from .base import Base
 
 
 class TimelineMembers(Base):

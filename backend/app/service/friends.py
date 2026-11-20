@@ -1,6 +1,6 @@
-from .base import BaseService
+from backend.app.model import Friends
 
-from backend.app.model.friends import Friends
+from .base import BaseService
 
 
 class FriendsService(BaseService):

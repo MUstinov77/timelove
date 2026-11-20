@@ -6,7 +6,7 @@ from backend.app.core.auth.jwt import JWTService
 from backend.app.core.exception.auth import LoginCredentialException
 from backend.app.core.utils.encrypt import get_hashed_password, verify_password
 from backend.app.dependencies.service import UserServiceDep
-from backend.app.model.user import User
+from backend.app.model import User
 from backend.app.schema.auth import Token, UserLoginSchema, UserSignupSchema
 
 BASE_PREFIX = "/auth"

@@ -5,7 +5,7 @@ from sqlalchemy import delete, select, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.model.base import Base
+from backend.app.model import Base
 
 
 class BaseService:
