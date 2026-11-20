@@ -1,3 +1,4 @@
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, UploadFile
 from fastapi.exceptions import HTTPException
@@ -41,9 +42,9 @@ async def get_attachments(
 )
 async def create_attachment(
         attachment_service: AttachmentServiceDep,
-        data: AttachmentCreateSchema = Depends(AttachmentCreateSchema.as_form),
-        file: UploadFile = File(...),
-        event: Event = Depends(retrieve_event(MemberPermission.MODERATOR)),
+        file: Annotated[UploadFile, File()],
+        data: Annotated[AttachmentCreateSchema, Depends(AttachmentCreateSchema.as_form)],
+        event: Annotated[Event, Depends(retrieve_event(MemberPermission.MODERATOR))]
 ):
 
     create_data = data.model_dump()
