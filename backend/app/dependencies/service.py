@@ -1,49 +1,48 @@
 from typing import Annotated
 
 from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.app.core.datastore import postgres_session_provider
+from backend.app.dependencies.datastore import PostgresSessionDep
 from backend.app.service.attachment import AttachmentService
 from backend.app.service.event import EventService
+from backend.app.service.friends import FriendsService
 from backend.app.service.member import MemberService
 from backend.app.service.timeline import TimelineService
 from backend.app.service.user import UserService
-from backend.app.service.friends import FriendsService
 
 
 def get_attachment_service(
-    session: Annotated[AsyncSession, Depends(postgres_session_provider)],
+    session: PostgresSessionDep,
 ) -> AttachmentService:
     return AttachmentService(session)
 
 
 def get_event_service(
-    session: Annotated[AsyncSession, Depends(postgres_session_provider)],
+    session: PostgresSessionDep,
 ) -> EventService:
     return EventService(session)
 
 
 async def get_member_service(
-    session: Annotated[AsyncSession, Depends(postgres_session_provider)],
+    session: PostgresSessionDep,
 ) -> MemberService:
     return MemberService(session)
 
 
 def get_timeline_service(
-    session: Annotated[AsyncSession, Depends(postgres_session_provider)],
+    session: PostgresSessionDep,
 ) -> TimelineService:
     return TimelineService(session)
 
 
 def get_user_service(
-    session: Annotated[AsyncSession, Depends(postgres_session_provider)],
+    session: PostgresSessionDep,
 ) -> UserService:
     return UserService(session)
 
 
 def get_friends_service(
-        session: Annotated[AsyncSession, Depends(postgres_session_provider)],
+        session: PostgresSessionDep,
 ) -> FriendsService:
     return FriendsService(session)
 
