@@ -8,6 +8,8 @@ from .base import Base
 
 class Friends(Base):
 
+    __tablename__ = "friends"
+
     user_id: Mapped[UUID] = mapped_column(
         ForeignKey(
             "users.id",
