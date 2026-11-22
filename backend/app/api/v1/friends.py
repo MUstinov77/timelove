@@ -1,23 +1,34 @@
 from uuid import UUID
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
-from backend.app.dependencies.service import FriendRequestServiceDep
+from backend.app.dependencies.service import FriendRequestServiceDep, FriendsServiceDep, UserServiceDep
+from backend.app.dependencies.auth import AuthUserDep
+from backend.app.core.exceptions import NotFoundException
 
 router = APIRouter(
-    prefix="/friends"
+    prefix="/friends",
 )
 
 @router.get("/")
 async def get_my_friends():
     pass
 
-@router.post("/{user_id}")
-async def add_user_to_friends(
-        user_id: UUID,
-        friend_request_service: FriendRequestServiceDep
+@router.post("/{receiver_id}")
+async def send_friend_request(
+        receiver_id: UUID,
+        friend_request_service: FriendRequestServiceDep,
+        friend_service: FriendsServiceDep,
+        user_service: UserServiceDep,
+        user_id: AuthUserDep
 ):
-    pass
+    friend_request = await friend_request_service.send_friend_request(user_id, receiver_id, friend_service, user_service)
+    if not friend_request:
+        raise HTTPException(
+            400,
+            "Fail to send friend request"
+        )
+    return {"message": "Friend request created"}
 
 
 @router.delete("/")
@@ -26,8 +37,21 @@ async def delete_from_friends():
 
 
 @router.post("/{request_id}/apply")
-async def apply_friendship_request():
-    pass
+async def apply_friendship_request(
+        request_id: UUID,
+        friend_request_service: FriendRequestServiceDep,
+        friend_service: FriendsServiceDep,
+        user_id: AuthUserDep
+):
+    friend_request = await friend_request_service.apply_request(request_id, user_id)
+    if not friend_request:
+        raise NotFoundException
+    friendship_create_data = {
+        "user_id": friend_request.sender_id,
+        "friend_id": friend_request.receiver_id
+    }
+    friendship = await friend_service.create()
+
 
 
 @router.post("/{request_i}/discard")
