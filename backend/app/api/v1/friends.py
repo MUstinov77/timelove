@@ -2,9 +2,13 @@ from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
 
-from backend.app.dependencies.service import FriendRequestServiceDep, FriendsServiceDep, UserServiceDep
-from backend.app.dependencies.auth import AuthUserDep
 from backend.app.core.exceptions import NotFoundException
+from backend.app.dependencies.auth import AuthUserDep
+from backend.app.dependencies.service import (
+    FriendRequestServiceDep,
+    FriendsServiceDep,
+    UserServiceDep,
+)
 
 router = APIRouter(
     prefix="/friends",
@@ -36,21 +40,21 @@ async def delete_from_friends():
     pass
 
 
-@router.post("/{request_id}/apply")
-async def apply_friendship_request(
+@router.post("/{request_id}/accept")
+async def accept_friendship_request(
         request_id: UUID,
         friend_request_service: FriendRequestServiceDep,
         friend_service: FriendsServiceDep,
         user_id: AuthUserDep
 ):
-    friend_request = await friend_request_service.apply_request(request_id, user_id)
-    if not friend_request:
-        raise NotFoundException
-    friendship_create_data = {
-        "user_id": friend_request.sender_id,
-        "friend_id": friend_request.receiver_id
-    }
-    friendship = await friend_service.create()
+    friendship = await friend_request_service.accept_request(
+        request_id=request_id,
+        receiver_id=user_id,
+        friend_service=friend_service,
+    )
+    if friendship is None:
+        raise NotFoundException()
+    return {"message": "User added to friends"}
 
 
 
