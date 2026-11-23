@@ -58,6 +58,13 @@ async def accept_friendship_request(
 
 
 
-@router.post("/{request_i}/discard")
-async def discard_friendship_request():
-    pass
+@router.post("/{request_id}/reject")
+async def discard_friendship_request(
+        request_id: UUID,
+        friend_request_service: FriendRequestServiceDep,
+        user_id: AuthUserDep
+):
+    deleted_friend_request = await friend_request_service.reject_request(request_id, user_id)
+    if not deleted_friend_request:
+        raise NotFoundException()
+    return {"message": "Request rejected"}

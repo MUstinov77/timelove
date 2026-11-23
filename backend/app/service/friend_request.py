@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from fastapi import HTTPException
-from sqlalchemy import and_, exists, or_, select
+from sqlalchemy import and_, exists, or_, select, delete
 from sqlalchemy.exc import IntegrityError
 
 from backend.app.model import FriendRequest, Friends
@@ -90,3 +90,23 @@ class FriendRequestService(BaseService):
             raise
 
         return friendship
+
+    async def reject_request(
+            self,
+            request_id: UUID,
+            user_id: UUID
+    ):
+        async with self.session.begin():
+            query = (
+                delete(self.model)
+                .where(
+                    self.model.id == request_id,
+                    or_(
+                        self.model.sender_id == user_id,
+                        self.model.receiver_id == user_id
+                    )
+                )
+                .returning(self.model.id)
+            )
+            result = await self.session.execute(query)
+            return result.scalar_one_or_none()
