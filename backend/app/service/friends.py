@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import select, exists, and_, or_, union
+from sqlalchemy import and_, exists, or_, select, union
 
 from backend.app.model import Friends, User
 

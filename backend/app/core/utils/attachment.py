@@ -5,7 +5,10 @@ import anyio
 from fastapi import UploadFile
 
 from backend.app.core.configuration import settings
-from backend.app.core.exceptions import FileTooLargeException, UnsupportedMediaTypeException
+from backend.app.core.exceptions import (
+    FileTooLargeException,
+    UnsupportedMediaTypeException,
+)
 
 CHUNK_SIZE = 1024 * 1024 # 1 Mb
 MAX_FILE_SIZE = 200 * 1024 * 1024 # 200 Mb

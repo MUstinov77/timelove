@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     TEST_DB_STAT: bool = False
 
     @property
-    def DB_URI(self): # noqa
+    def DB_URI(self):
         ## try load driver via config file
         # try:
         #     import DB_DRIVER
@@ -38,7 +38,7 @@ class Settings(BaseSettings):
         )
 
     @property
-    def REDIS_URI(self): # noqa
+    def REDIS_URI(self):
         return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
 
     model_config = SettingsConfigDict(

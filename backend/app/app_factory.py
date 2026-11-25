@@ -1,9 +1,8 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.responses import JSONResponse
 from starlette.middleware.errors import ServerErrorMiddleware
 
 from backend.app.api.v1 import api_router

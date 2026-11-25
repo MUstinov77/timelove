@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import select, exists
+from sqlalchemy import exists, select
 
 from backend.app.model import User
 

@@ -1,13 +1,13 @@
 from typing import Annotated
 
 from fastapi.params import Depends
+from redis.asyncio import Redis as AsyncRedis
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
-from redis.asyncio import Redis as AsyncRedis
 
 from backend.app.core.configuration import settings
 

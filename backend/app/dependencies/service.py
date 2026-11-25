@@ -5,11 +5,11 @@ from fastapi import Depends
 from backend.app.dependencies.datastore import PostgresSessionDep
 from backend.app.service.attachment import AttachmentService
 from backend.app.service.event import EventService
+from backend.app.service.friend_request import FriendRequestService
 from backend.app.service.friends import FriendsService
 from backend.app.service.member import MemberService
 from backend.app.service.timeline import TimelineService
 from backend.app.service.user import UserService
-from backend.app.service.friend_request import FriendRequestService
 
 
 def get_attachment_service(

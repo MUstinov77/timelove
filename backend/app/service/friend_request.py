@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from fastapi import HTTPException
-from sqlalchemy import and_, exists, or_, select, delete
+from sqlalchemy import and_, delete, exists, or_, select
 from sqlalchemy.exc import IntegrityError
 
 from backend.app.model import FriendRequest, Friends
