@@ -9,9 +9,9 @@ from backend.app.dependencies.permission import (
     MemberPermissionDep,
     ModeratorPermissionDep,
 )
-from backend.app.dependencies.service import MemberServiceDep, TimelineServiceDep, TimelineInviteDep
-from backend.app.schema.timeline import InviteUserToTimelineSchema
+from backend.app.dependencies.service import TimelineInviteDep, TimelineServiceDep
 from backend.app.schema.timeline import (
+    InviteUserToTimelineSchema,
     TimelineCreateUpdateSchema,
     TimelineResponseSchema,
 )
@@ -49,19 +49,9 @@ async def get_my_timelines(
 async def create_timeline(
     create_data: TimelineCreateUpdateSchema,
     timeline_service: TimelineServiceDep,
-    member_service: MemberServiceDep,
     user_id: AuthUserDep,
 ):
-    timeline_data = create_data.model_dump()
-    timeline = await timeline_service.create(timeline_data)
-    if not timeline:
-        raise NotFoundException
-    member_create_data = InviteUserToTimelineSchema(
-        member_id=user_id,
-        member_permission=MemberPermission.ADMIN
-    ).model_dump()
-    member_create_data["timeline_id"] = timeline.id
-    await member_service.create(member_create_data)
+    timeline = await timeline_service.create_timeline(create_data.title, user_id)
     return TimelineResponseSchema(
         id=timeline.id,
         title=timeline.title,
