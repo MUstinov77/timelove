@@ -9,14 +9,22 @@ from backend.app.dependencies.service import (
     FriendsServiceDep,
     UserServiceDep,
 )
+from backend.app.schema.friend import FriendSummary
 
 router = APIRouter(
     prefix="/friends",
 )
 
-@router.get("/")
-async def get_my_friends():
-    pass
+@router.get(
+    "/",
+    response_model=list[FriendSummary]
+)
+async def get_my_friends(
+        friend_service: FriendsServiceDep,
+        user_id: AuthUserDep,
+):
+    friends = await friend_service.retrieve_user_friends(user_id)
+    return friends
 
 @router.post("/{receiver_id}")
 async def send_friend_request(
