@@ -9,8 +9,8 @@ from backend.app.dependencies.permission import (
     MemberPermissionDep,
     ModeratorPermissionDep,
 )
-from backend.app.dependencies.service import MemberServiceDep, TimelineServiceDep
-from backend.app.schema.member import InviteUserToTimelineSchema
+from backend.app.dependencies.service import MemberServiceDep, TimelineServiceDep, TimelineInviteDep
+from backend.app.schema.timeline import InviteUserToTimelineSchema
 from backend.app.schema.timeline import (
     TimelineCreateUpdateSchema,
     TimelineResponseSchema,
@@ -70,18 +70,21 @@ async def create_timeline(
 
 # add some logic to acceptable invite(create invite instance)
 @router.post(
-    "/{timeline_id}/add"
+    "/{timeline_id}/invite"
 )
-async def add_user_to_timeline(
+async def invite_user_to_timeline(
         timeline_id: int,
         invite_data: InviteUserToTimelineSchema,
-        member_service: MemberServiceDep,
-        _moder_permission: ModeratorPermissionDep
+        timeline_invite_service: TimelineInviteDep,
+        _moder_permission: ModeratorPermissionDep,
+        user_id: AuthUserDep
 ):
-    membership_data = invite_data.model_dump()
-    membership_data["timeline_id"] = timeline_id
-    await member_service.create(membership_data)
-    return {"message": "User added to timeline"}
+    invite_create_data = invite_data.model_dump()
+    invite_create_data["timeline_id"] = timeline_id
+    invite_create_data["sender_id"] = user_id
+    invite_create_data["member_permission"] = MemberPermission.MEMBER
+    await timeline_invite_service.create(invite_create_data)
+    return {"message": "User invited to timeline"}
 
 
 @router.get(

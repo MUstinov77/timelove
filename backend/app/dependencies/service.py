@@ -9,6 +9,7 @@ from backend.app.service.friend_request import FriendRequestService
 from backend.app.service.friends import FriendsService
 from backend.app.service.member import MemberService
 from backend.app.service.timeline import TimelineService
+from backend.app.service.timeline_invite import TimelineInviteService
 from backend.app.service.user import UserService
 
 
@@ -53,6 +54,11 @@ def get_friend_request_service(
 ) -> FriendRequestService:
     return FriendRequestService(session)
 
+def get_timeline_invite_service(
+        session: PostgresSessionDep
+) -> TimelineInviteService:
+    return TimelineInviteService(session)
+
 
 AttachmentServiceDep = Annotated[AttachmentService, Depends(get_attachment_service)]
 EventServiceDep = Annotated[EventService, Depends(get_event_service)]
@@ -60,4 +66,5 @@ FriendsServiceDep = Annotated[FriendsService, Depends(get_friends_service)]
 FriendRequestServiceDep = Annotated[FriendRequestService, Depends(get_friend_request_service)]
 MemberServiceDep = Annotated[MemberService, Depends(get_member_service)]
 TimelineServiceDep = Annotated[TimelineService, Depends(get_timeline_service)]
+TimelineInviteDep = Annotated[TimelineInviteService, Depends(get_timeline_invite_service)]
 UserServiceDep = Annotated[UserService, Depends(get_user_service)]

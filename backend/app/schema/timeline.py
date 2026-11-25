@@ -1,4 +1,6 @@
-from pydantic import BaseModel
+from uuid import UUID
+
+from pydantic import BaseModel, field_validator
 
 from backend.app.core.enum.permission import MemberPermission
 
@@ -12,3 +14,8 @@ class TimelineResponseSchema(BaseModel):
     id: int
     title: str
     member_permission: MemberPermission
+
+
+class InviteUserToTimelineSchema(BaseModel):
+
+    receiver_id: UUID
