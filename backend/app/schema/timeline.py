@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 
 from backend.app.core.enum.permission import MemberPermission
 
