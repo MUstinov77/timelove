@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import and_, exists, or_, select, union
+from sqlalchemy import and_, exists, or_, select, union, delete
 
 from backend.app.model import Friends, User
 
@@ -50,3 +50,27 @@ class FriendsService(BaseService):
         )
         result = await self.session.execute(query)
         return result.all()
+
+    async def delete_friend(
+            self,
+            user_id: UUID,
+            friend_id: UUID
+    ):
+        query = (
+            delete(self.model)
+            .where(
+                or_(
+                    and_(
+                        self.model.user_id == user_id,
+                        self.model.friend_id == friend_id
+                    ),
+                    and_(
+                        self.model.user_id == friend_id,
+                        self.model.friend_id == user_id
+                    )
+                )
+            )
+            .returning(self.model)
+        )
+        result = await self.session.execute(query)
+        return result.first()

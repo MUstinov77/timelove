@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 from backend.app.core.exceptions import NotFoundException
 from backend.app.dependencies.auth import AuthUserDep
@@ -26,7 +26,10 @@ async def get_my_friends(
     friends = await friend_service.retrieve_user_friends(user_id)
     return friends
 
-@router.post("/{receiver_id}")
+@router.post(
+    "/{receiver_id}",
+    status_code=status.HTTP_201_CREATED
+)
 async def send_friend_request(
         receiver_id: UUID,
         friend_request_service: FriendRequestServiceDep,
@@ -43,10 +46,19 @@ async def send_friend_request(
     return {"message": "Friend request created"}
 
 
-@router.delete("/")
-async def delete_from_friends():
-    pass
-
+@router.delete(
+    "/{friend_id}",
+    status_code=status.HTTP_204_NO_CONTENT
+)
+async def delete_from_friends(
+        friend_id: UUID,
+        friend_service: FriendsServiceDep,
+        user_id: AuthUserDep,
+):
+    deleted_friendship = await friend_service.delete_friend(user_id, friend_id)
+    if not deleted_friendship:
+        raise NotFoundException
+    return {"message": "friend deleted"}
 
 @router.post("/{request_id}/accept")
 async def accept_friendship_request(
