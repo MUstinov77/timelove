@@ -1,15 +1,13 @@
 import asyncio
-import importlib
-import pkgutil
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from alembic import context
-
 from backend.app.core.configuration import settings
+from backend.app.model import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -20,24 +18,8 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-from backend.app.model.base import Base
-# from backend.app.model.user import User
-# from backend.app.model.timeline import Timeline
-# from backend.app.model.event import Event
-# from backend.app.model.timeline_members import TimelineMembers
-# from backend.app.model.attachment import Attachment
-
+# Importing the model package registers all exported tables with Base.metadata.
 target_metadata = Base.metadata
-
-from backend.app import model
-
-for _, module_name, is_package in pkgutil.iter_modules(model.__path__):
-    if not is_package:
-        importlib.import_module(f".{module_name}", model.__name__)
 
 
 # other values from the config, defined by the needs of env.py,
@@ -66,8 +48,6 @@ def run_migrations_offline() -> None:
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
-    print(Base.registry._class_registry)
-
     with context.begin_transaction():
         context.run_migrations()
 
