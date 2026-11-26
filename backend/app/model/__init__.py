@@ -7,7 +7,9 @@ from .timeline import Timeline
 from .timeline_invite import TimelineInvite
 from .timeline_members import TimelineMembers
 from .user import User
+from .vote import Vote
 from .voting import Voting
+from .voting_option import VotingOption
 
 __all__ = (
     "Attachment",
@@ -19,5 +21,7 @@ __all__ = (
     "TimelineInvite",
     "TimelineMembers",
     "User",
+    "Vote",
     "Voting",
+    "VotingOption",
 )
